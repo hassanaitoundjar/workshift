@@ -15,16 +15,24 @@
 
 ## Option 2: Manual Release via Web Interface
 
-1. **Go to GitHub Releases**:
+1. **Build Android APK** (if Android SDK is set up):
+   ```bash
+   flutter build apk --release
+   ```
+   APK location: `build/app/outputs/flutter-apk/app-release.apk`
+
+2. **Go to GitHub Releases**:
    https://github.com/hassanaitoundjar/workshift/releases/new
 
-2. **Fill in the form**:
+3. **Fill in the form**:
    - **Tag**: `v1.0.1` (or create new tag)
    - **Release title**: `Version 1.0.1`
    - **Description**: Copy from `version.json` releaseNotes
-   - **Attach binaries**: Upload `build/linux/x64/release/bundle/workshift`
+   - **Attach binaries**: 
+     - Upload `build/linux/x64/release/bundle/workshift` (Linux)
+     - Upload `build/app/outputs/flutter-apk/app-release.apk` (Android, if built)
 
-3. **Click "Publish release"**
+4. **Click "Publish release"**
 
 ## Option 3: Using GitHub API (if you have a token)
 
