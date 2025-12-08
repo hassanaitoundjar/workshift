@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "buildNumber": "1",
-  "downloadUrl": "https://github.com/yourusername/workshift/releases/latest",
+  "downloadUrl": "https://github.com/hassanaitoundjar/workshift/releases/latest",
   "forceUpdate": false,
   "releaseNotes": "Initial release of WorkShift app.\n- Employee management\n- Client management\n- Shift scheduling\n- Reports generation"
 }

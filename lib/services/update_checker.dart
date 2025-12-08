@@ -29,10 +29,10 @@ class AppVersion {
 }
 
 class UpdateChecker {
-  // Replace this URL with your own version check endpoint
-  // You can host a simple JSON file on GitHub, your server, or any static hosting
+  // GitHub Raw URL for version check
+  // The version.json file should be in the root of your repository
   static const String versionCheckUrl = 
-      'https://raw.githubusercontent.com/yourusername/workshift/main/version.json';
+      'https://raw.githubusercontent.com/hassanaitoundjar/workshift/main/version.json';
   
   // Alternative: Use a simple JSON file hosted anywhere
   // Example: 'https://yourdomain.com/api/version.json'
