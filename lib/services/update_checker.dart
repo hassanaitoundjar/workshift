@@ -49,13 +49,16 @@ class UpdateChecker {
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
         return AppVersion.fromJson(jsonData);
+      } else {
+        // Log error for debugging (in production, you might want to use a logging service)
+        print('Update check failed: HTTP ${response.statusCode}');
+        return null;
       }
     } catch (e) {
-      // Handle network errors silently
-      // Return null if check fails (user can still use the app)
+      // Handle network errors
+      print('Update check error: $e');
       return null;
     }
-    return null;
   }
 
   /// Get current app version

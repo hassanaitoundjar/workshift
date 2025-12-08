@@ -941,9 +941,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(l10n.updateCheckFailed),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.updateCheckFailed),
+                    const SizedBox(height: 4),
+                    Text(
+                      'URL: ${UpdateChecker.versionCheckUrl}',
+                      style: const TextStyle(fontSize: 11, color: Colors.white70),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
                 backgroundColor: AppTheme.warningColor,
                 behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
