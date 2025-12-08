@@ -1,0 +1,8 @@
+{
+  "version": "1.0.1",
+  "buildNumber": "2",
+  "downloadUrl": "https://your-domain.com/downloads/workshift.apk",
+  "forceUpdate": false,
+  "releaseNotes": "Bug fixes and performance improvements.\n- Fixed Excel export issue\n- Improved UI responsiveness\n- Added new features"
+}
+
