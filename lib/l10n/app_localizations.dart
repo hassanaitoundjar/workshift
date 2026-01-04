@@ -103,7 +103,7 @@ abstract class AppLocalizations {
   /// The application title
   ///
   /// In en, this message translates to:
-  /// **'WorkShift'**
+  /// **'Shihab Falling'**
   String get appTitle;
 
   /// No description provided for @home.
@@ -196,11 +196,23 @@ abstract class AppLocalizations {
   /// **'Client Name'**
   String get clientName;
 
+  /// No description provided for @projectName.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Name'**
+  String get projectName;
+
   /// No description provided for @location.
   ///
   /// In en, this message translates to:
   /// **'Location'**
   String get location;
+
+  /// No description provided for @enterProjectName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter project name'**
+  String get enterProjectName;
 
   /// No description provided for @selectEmployee.
   ///
@@ -493,7 +505,7 @@ abstract class AppLocalizations {
   /// No description provided for @aboutWorkShift.
   ///
   /// In en, this message translates to:
-  /// **'About WorkShift'**
+  /// **'About Shihab Falling'**
   String get aboutWorkShift;
 
   /// No description provided for @optional.
@@ -711,6 +723,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear'**
   String get clear;
+
+  /// No description provided for @copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy;
 
   /// No description provided for @noEmployeesFound.
   ///
@@ -1077,6 +1095,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cannot open download link. Please check your internet connection.'**
   String get cannotOpenDownloadLink;
+
+  /// No description provided for @downloadLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Link'**
+  String get downloadLink;
+
+  /// No description provided for @copyUrlToOpenManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Please copy the URL below and open it in your browser:'**
+  String get copyUrlToOpenManually;
+
+  /// No description provided for @urlCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'URL copied to clipboard'**
+  String get urlCopied;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @restoreDataConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to restore data from backup? This will overwrite all current data.'**
+  String get restoreDataConfirm;
+
+  /// No description provided for @restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// No description provided for @dataRestoredSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Data restored successfully'**
+  String get dataRestoredSuccessfully;
 }
 
 class _AppLocalizationsDelegate

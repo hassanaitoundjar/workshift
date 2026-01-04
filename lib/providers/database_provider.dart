@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'dart:convert';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../models/employee.dart';
 import '../models/client.dart';
@@ -207,7 +208,6 @@ class DatabaseProvider extends ChangeNotifier {
       if (existingShift.date.year == shift.date.year &&
           existingShift.date.month == shift.date.month &&
           existingShift.date.day == shift.date.day) {
-        
         // If either shift is All Day, it conflicts with everything
         if (existingShift.shiftType == ShiftType.allDay ||
             shift.shiftType == ShiftType.allDay) {
@@ -258,5 +258,63 @@ class DatabaseProvider extends ChangeNotifier {
     await _clientBox?.close();
     await _shiftBox?.close();
     await _settingsBox?.close();
+  }
+
+  // Export data to JSON string
+  Future<String> exportData() async {
+    final data = {
+      'version': 1,
+      'timestamp': DateTime.now().toIso8601String(),
+      'employees': _employeeBox?.values.map((e) => e.toJson()).toList() ?? [],
+      'clients': _clientBox?.values.map((c) => c.toJson()).toList() ?? [],
+      'shifts': _shiftBox?.values.map((s) => s.toJson()).toList() ?? [],
+    };
+    return jsonEncode(data);
+  }
+
+  // Import data from JSON string
+  Future<void> importData(String jsonString) async {
+    try {
+      final data = jsonDecode(jsonString);
+
+      // Validate structure
+      if (data['employees'] == null ||
+          data['clients'] == null ||
+          data['shifts'] == null) {
+        throw const FormatException('Invalid backup file format');
+      }
+
+      // Clear existing data
+      await clearAllData();
+
+      // Restore Employees
+      final employees = (data['employees'] as List)
+          .map((e) => Employee.fromJson(e))
+          .toList();
+      for (var employee in employees) {
+        await addEmployee(employee);
+      }
+
+      // Restore Clients
+      final clients = (data['clients'] as List)
+          .map((c) => Client.fromJson(c))
+          .toList();
+      for (var client in clients) {
+        await addClient(client);
+      }
+
+      // Restore Shifts
+      final shifts = (data['shifts'] as List)
+          .map((s) => Shift.fromJson(s))
+          .toList();
+      for (var shift in shifts) {
+        await addShift(shift);
+      }
+
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error importing data: $e');
+      rethrow;
+    }
   }
 }

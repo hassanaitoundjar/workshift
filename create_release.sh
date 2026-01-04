@@ -50,6 +50,14 @@ gh release create "${TAG}" \
 if [ $? -eq 0 ]; then
   echo "✅ Release created successfully!"
   echo "Release URL: https://github.com/hassanaitoundjar/workshift/releases/tag/${TAG}"
+  echo ""
+  echo "📝 Next steps:"
+  echo "1. Update version.json downloadUrl to:"
+  if [ -n "$ANDROID_APK" ] && [ -f "$ANDROID_APK" ]; then
+    echo "   https://github.com/hassanaitoundjar/workshift/releases/download/${TAG}/app-release.apk"
+  fi
+  echo "2. Commit and push version.json to repository"
+  echo "3. Test the update mechanism in the app"
 else
   echo "❌ Failed to create release. Make sure you're authenticated: gh auth login"
   exit 1

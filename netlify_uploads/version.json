@@ -1,0 +1,8 @@
+{
+  "version": "1.0.1",
+  "buildNumber": "2",
+  "downloadUrl": "https://github.com/hassanaitoundjar/workshift/releases/download/v1.0.1/app-release.apk",
+  "forceUpdate": false,
+  "releaseNotes": "Version 1.0.1 - Update Check Test\n\nNew Features:\n- Added automatic update checking system\n- Improved settings screen design\n- Enhanced Excel report generation\n\nBug Fixes:\n- Fixed overflow issues in various screens\n- Improved responsive design\n\nPerformance:\n- Optimized app loading time\n- Better memory management"
+}
+

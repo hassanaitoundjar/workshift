@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appTitle => 'وردية العمل';
+  String get appTitle => 'Shihab Falling';
 
   @override
   String get home => 'الرئيسية';
@@ -57,7 +57,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get clientName => 'اسم العميل';
 
   @override
+  String get projectName => 'اسم المشروع';
+
+  @override
   String get location => 'الموقع';
+
+  @override
+  String get enterProjectName => 'أدخل اسم المشروع';
 
   @override
   String get selectEmployee => 'اختر موظف';
@@ -205,7 +211,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appVersion => 'إصدار التطبيق';
 
   @override
-  String get aboutWorkShift => 'حول وردية العمل';
+  String get aboutWorkShift => 'حول Shihab Falling';
 
   @override
   String get optional => 'اختياري';
@@ -315,6 +321,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get clear => 'مسح';
+
+  @override
+  String get copy => 'نسخ';
 
   @override
   String get noEmployeesFound => 'لم يتم العثور على موظفين';
@@ -505,4 +514,26 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get cannotOpenDownloadLink =>
       'لا يمكن فتح رابط التحميل. يرجى التحقق من اتصالك بالإنترنت.';
+
+  @override
+  String get downloadLink => 'رابط التحميل';
+
+  @override
+  String get copyUrlToOpenManually => 'يرجى نسخ الرابط أدناه وفتحه في المتصفح:';
+
+  @override
+  String get urlCopied => 'تم نسخ الرابط إلى الحافظة';
+
+  @override
+  String get error => 'خطأ';
+
+  @override
+  String get restoreDataConfirm =>
+      'هل أنت متأكد أنك تريد استعادة البيانات من النسخة الاحتياطية؟ سيؤدي ذلك إلى استبدال جميع البيانات الحالية.';
+
+  @override
+  String get restore => 'استعادة';
+
+  @override
+  String get dataRestoredSuccessfully => 'تم استعادة البيانات بنجاح';
 }

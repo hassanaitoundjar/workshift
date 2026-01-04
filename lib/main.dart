@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
     final languageProvider = Provider.of<LanguageProvider>(context);
 
     return MaterialApp(
-      title: 'WorkShift',
+      title: 'Shihab Falling',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

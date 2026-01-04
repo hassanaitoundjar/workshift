@@ -17,10 +17,6 @@ class ClientDetailScreen extends StatelessWidget {
     final allShifts = dbProvider.getShiftsByClient(client.id);
     final isSmallScreen = MediaQuery.of(context).size.width < 600;
 
-    // Get unique employees
-    final employeeIds = allShifts.map((s) => s.employeeId).toSet();
-    final uniqueEmployees = employeeIds.length;
-
     // Calculate current month stats
     final now = DateTime.now();
     final currentMonthStart = DateTime(now.year, now.month, 1);
@@ -33,21 +29,15 @@ class ClientDetailScreen extends StatelessWidget {
           shift.date.isBefore(currentMonthEnd.add(const Duration(days: 1)));
     }).toList();
 
-    // Calculate last 15 days
-    final last15DaysStart = now.subtract(const Duration(days: 15));
-    final last15DaysShifts = allShifts.where((shift) {
-      return shift.date.isAfter(
-            last15DaysStart.subtract(const Duration(days: 1)),
-          ) &&
-          shift.date.isBefore(now.add(const Duration(days: 1)));
-    }).toList();
+    // Get unique employees for current month
+    final employeeIds = currentMonthShifts.map((s) => s.employeeId).toSet();
+    final uniqueEmployees = employeeIds.length;
 
-    // Calculate next 15 days
-    final next15DaysEnd = now.add(const Duration(days: 15));
-    final next15DaysShifts = allShifts.where((shift) {
-      return shift.date.isAfter(now.subtract(const Duration(days: 1))) &&
-          shift.date.isBefore(next15DaysEnd.add(const Duration(days: 1)));
-    }).toList();
+    // Calculate duration-based days for current month
+    final monthlyDays = currentMonthShifts.fold<double>(
+      0,
+      (sum, shift) => sum + (shift.durationInHours / 8.0),
+    );
 
     return Scaffold(
       body: CustomScrollView(
@@ -62,80 +52,132 @@ class ClientDetailScreen extends StatelessWidget {
                   gradient: AppTheme.accentGradient,
                 ),
                 child: SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 20),
-                      Container(
-                        width: 110,
-                        height: 110,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.white,
-                              Colors.white.withValues(alpha: 0.9),
-                            ],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.3),
-                              blurRadius: 20,
-                              offset: const Offset(0, 10),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.business_rounded,
-                          size: 56,
-                          color: AppTheme.accentColor,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        client.name,
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      if (client.location != null)
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 8,
-                          ),
+                          width: 80,
+                          height: 80,
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.25),
-                            borderRadius: BorderRadius.circular(25),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.3),
-                              width: 1,
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white,
+                                Colors.white.withValues(alpha: 0.9),
+                              ],
                             ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.location_on_rounded,
-                                size: 18,
-                                color: Colors.white.withValues(alpha: 0.95),
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                client.location!,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
                               ),
                             ],
                           ),
+                          child: const Icon(
+                            Icons.business_rounded,
+                            size: 40,
+                            color: AppTheme.accentColor,
+                          ),
                         ),
-                    ],
+                        const SizedBox(height: 12),
+                        Text(
+                          client.name,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 6),
+                        if (client.location != null)
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.25),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.location_on_rounded,
+                                  size: 16,
+                                  color: Colors.white.withValues(alpha: 0.95),
+                                ),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: Text(
+                                    client.location!,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (client.projectName != null) ...[
+                          const SizedBox(height: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.25),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.work_outline_rounded,
+                                  size: 16,
+                                  color: Colors.white.withValues(alpha: 0.95),
+                                ),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: Text(
+                                    client.projectName!,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 12),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -172,7 +214,11 @@ class ClientDetailScreen extends StatelessWidget {
                       isSmallScreen,
                     ),
                     const SizedBox(height: 12),
-                    _buildContactCard(context, client.contactPhone!, isSmallScreen),
+                    _buildContactCard(
+                      context,
+                      client.contactPhone!,
+                      isSmallScreen,
+                    ),
                     const SizedBox(height: 24),
                   ],
 
@@ -189,34 +235,10 @@ class ClientDetailScreen extends StatelessWidget {
                       Expanded(
                         child: _buildStatCard(
                           context,
-                          'Total Shifts',
-                          allShifts.length.toString(),
-                          Icons.work_rounded,
-                          AppTheme.accentColor,
-                          isSmallScreen,
-                        ),
-                      ),
-                      SizedBox(width: isSmallScreen ? 10 : 12),
-                      Expanded(
-                        child: _buildStatCard(
-                          context,
-                          'Employees',
-                          uniqueEmployees.toString(),
-                          Icons.people_rounded,
-                          AppTheme.primaryColor,
-                          isSmallScreen,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildStatCard(
-                          context,
-                          'This Month',
-                          currentMonthShifts.length.toString(),
+                          'Days (Month)',
+                          monthlyDays % 1 == 0
+                              ? monthlyDays.toInt().toString()
+                              : monthlyDays.toStringAsFixed(1),
                           Icons.calendar_month_rounded,
                           AppTheme.secondaryColor,
                           isSmallScreen,
@@ -226,47 +248,10 @@ class ClientDetailScreen extends StatelessWidget {
                       Expanded(
                         child: _buildStatCard(
                           context,
-                          'Last 15 Days',
-                          last15DaysShifts.length.toString(),
-                          Icons.history_rounded,
-                          AppTheme.morningShiftColor,
-                          isSmallScreen,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 15-Day Periods
-                  _buildSectionHeader(
-                    context,
-                    '15-Day Periods',
-                    Icons.timeline_rounded,
-                    isSmallScreen,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _build15DayCard(
-                          context,
-                          'Last 15 Days',
-                          last15DaysShifts.length,
-                          last15DaysShifts.length,
-                          AppTheme.secondaryColor,
-                          Icons.history_rounded,
-                          isSmallScreen,
-                        ),
-                      ),
-                      SizedBox(width: isSmallScreen ? 10 : 12),
-                      Expanded(
-                        child: _build15DayCard(
-                          context,
-                          'Next 15 Days',
-                          next15DaysShifts.length,
-                          next15DaysShifts.length,
-                          AppTheme.accentColor,
-                          Icons.upcoming_rounded,
+                          'Employees (Month)',
+                          uniqueEmployees.toString(),
+                          Icons.people_rounded,
+                          AppTheme.primaryColor,
                           isSmallScreen,
                         ),
                       ),
@@ -282,10 +267,10 @@ class ClientDetailScreen extends StatelessWidget {
                     isSmallScreen,
                   ),
                   const SizedBox(height: 12),
-                  if (allShifts.isEmpty)
+                  if (currentMonthShifts.isEmpty)
                     _buildEmptyShiftsCard(context, isSmallScreen)
                   else
-                    ...allShifts.take(10).map((shift) {
+                    ...currentMonthShifts.take(10).map((shift) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 12),
                         child: ShiftCard(shift: shift),
@@ -324,9 +309,9 @@ class ClientDetailScreen extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: isSmallScreen ? 18 : null,
-              ),
+            fontWeight: FontWeight.bold,
+            fontSize: isSmallScreen ? 18 : null,
+          ),
         ),
       ],
     );
@@ -396,10 +381,7 @@ class ClientDetailScreen extends StatelessWidget {
             onPressed: () {
               // TODO: Implement phone call
             },
-            icon: Icon(
-              Icons.phone_outlined,
-              color: AppTheme.accentColor,
-            ),
+            icon: Icon(Icons.phone_outlined, color: AppTheme.accentColor),
           ),
         ],
       ),
@@ -419,10 +401,7 @@ class ClientDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -453,81 +432,6 @@ class ClientDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _build15DayCard(
-    BuildContext context,
-    String title,
-    int shifts,
-    int employees,
-    Color color,
-    IconData icon,
-    bool isSmallScreen,
-  ) {
-    return Container(
-      padding: EdgeInsets.all(isSmallScreen ? 14 : 18),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: color.withValues(alpha: 0.3),
-          width: 2,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: color, size: isSmallScreen ? 16 : 18),
-              ),
-              SizedBox(width: isSmallScreen ? 8 : 10),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: isSmallScreen ? 12 : 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: isSmallScreen ? 12 : 16),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '$shifts',
-                style: TextStyle(
-                  fontSize: isSmallScreen ? 28 : 36,
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6, left: 4),
-                child: Text(
-                  'shifts',
-                  style: TextStyle(
-                    fontSize: isSmallScreen ? 11 : 13,
-                    color: color.withValues(alpha: 0.7),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildEmptyShiftsCard(BuildContext context, bool isSmallScreen) {
     return Container(
       padding: EdgeInsets.all(isSmallScreen ? 28 : 32),
@@ -547,17 +451,17 @@ class ClientDetailScreen extends StatelessWidget {
           Text(
             'No shifts yet',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.grey.shade600,
-                  fontSize: isSmallScreen ? 15 : null,
-                ),
+              color: Colors.grey.shade600,
+              fontSize: isSmallScreen ? 15 : null,
+            ),
           ),
           SizedBox(height: isSmallScreen ? 4 : 6),
           Text(
             'Shifts will appear here once assigned',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey.shade500,
-                  fontSize: isSmallScreen ? 12 : null,
-                ),
+              color: Colors.grey.shade500,
+              fontSize: isSmallScreen ? 12 : null,
+            ),
             textAlign: TextAlign.center,
           ),
         ],

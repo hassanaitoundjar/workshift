@@ -64,3 +64,5 @@ Currently, the download URL points to the repository page. When you create your 
 - Users can download APK/IPA files from the release page
 - Release notes will be displayed in the update dialog
 
+
+

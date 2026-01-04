@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appTitle => 'WorkShift';
+  String get appTitle => 'Shihab Falling';
 
   @override
   String get home => 'Accueil';
@@ -57,7 +57,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get clientName => 'Nom du client';
 
   @override
+  String get projectName => 'Nom du projet';
+
+  @override
   String get location => 'Emplacement';
+
+  @override
+  String get enterProjectName => 'Entrez le nom du projet';
 
   @override
   String get selectEmployee => 'Sélectionner un employé';
@@ -205,7 +211,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appVersion => 'Version de l\'application';
 
   @override
-  String get aboutWorkShift => 'À propos de WorkShift';
+  String get aboutWorkShift => 'À propos de Shihab Falling';
 
   @override
   String get optional => 'Optionnel';
@@ -317,6 +323,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get clear => 'Effacer';
+
+  @override
+  String get copy => 'Copier';
 
   @override
   String get noEmployeesFound => 'Aucun employé trouvé';
@@ -514,4 +523,27 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get cannotOpenDownloadLink =>
       'Impossible d\'ouvrir le lien de téléchargement. Veuillez vérifier votre connexion Internet.';
+
+  @override
+  String get downloadLink => 'Lien de téléchargement';
+
+  @override
+  String get copyUrlToOpenManually =>
+      'Veuillez copier l\'URL ci-dessous et l\'ouvrir dans votre navigateur:';
+
+  @override
+  String get urlCopied => 'URL copiée dans le presse-papiers';
+
+  @override
+  String get error => 'Erreur';
+
+  @override
+  String get restoreDataConfirm =>
+      'Êtes-vous sûr de vouloir restaurer les données depuis la sauvegarde ? Cela écrasera toutes les données actuelles.';
+
+  @override
+  String get restore => 'Restaurer';
+
+  @override
+  String get dataRestoredSuccessfully => 'Données restaurées avec succès';
 }

@@ -18,6 +18,7 @@ class AddClientScreen extends StatefulWidget {
 class _AddClientScreenState extends State<AddClientScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _projectNameController = TextEditingController();
   final _locationController = TextEditingController();
   final _phoneController = TextEditingController();
 
@@ -28,6 +29,7 @@ class _AddClientScreenState extends State<AddClientScreen> {
     super.initState();
     if (widget.client != null) {
       _nameController.text = widget.client!.name;
+      _projectNameController.text = widget.client!.projectName ?? '';
       _locationController.text = widget.client!.location ?? '';
       _phoneController.text = widget.client!.contactPhone ?? '';
     }
@@ -36,6 +38,7 @@ class _AddClientScreenState extends State<AddClientScreen> {
   @override
   void dispose() {
     _nameController.dispose();
+    _projectNameController.dispose();
     _locationController.dispose();
     _phoneController.dispose();
     super.dispose();
@@ -55,6 +58,9 @@ class _AddClientScreenState extends State<AddClientScreen> {
     final client = Client(
       id: widget.client?.id ?? const Uuid().v4(),
       name: _nameController.text.trim(),
+      projectName: _projectNameController.text.trim().isEmpty
+          ? null
+          : _projectNameController.text.trim(),
       location: _locationController.text.trim(),
       contactPhone: _phoneController.text.trim().isEmpty
           ? null
@@ -96,7 +102,9 @@ class _AddClientScreenState extends State<AddClientScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16, bottom: 16),
                         child: Text(
-                          widget.client == null ? l10n.addClient : l10n.editClient,
+                          widget.client == null
+                              ? l10n.addClient
+                              : l10n.editClient,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -120,29 +128,35 @@ class _AddClientScreenState extends State<AddClientScreen> {
                       final availableHeight = constraints.maxHeight;
                       final isExpanded = availableHeight > 180;
                       final isVeryCompact = availableHeight < 120;
-                      
+
                       // Calculate sizes based on available space
-                      final iconPadding = isVeryCompact ? 8.0 : (isExpanded ? 16.0 : 12.0);
+                      final iconPadding = isVeryCompact
+                          ? 8.0
+                          : (isExpanded ? 16.0 : 12.0);
                       final iconSize = isVeryCompact
                           ? 24.0
                           : (isExpanded
-                              ? (isSmallScreen ? 32.0 : 40.0)
-                              : (isSmallScreen ? 24.0 : 28.0));
+                                ? (isSmallScreen ? 32.0 : 40.0)
+                                : (isSmallScreen ? 24.0 : 28.0));
                       final titleSize = isVeryCompact
                           ? 18.0
                           : (isExpanded
-                              ? (isSmallScreen ? 28.0 : 32.0)
-                              : (isSmallScreen ? 20.0 : 24.0));
-                      final spacing = isVeryCompact ? 4.0 : (isExpanded ? 16.0 : 8.0);
+                                ? (isSmallScreen ? 28.0 : 32.0)
+                                : (isSmallScreen ? 20.0 : 24.0));
+                      final spacing = isVeryCompact
+                          ? 4.0
+                          : (isExpanded ? 16.0 : 8.0);
                       final subtitleSize = isExpanded
                           ? (isSmallScreen ? 14.0 : 16.0)
                           : (isSmallScreen ? 12.0 : 13.0);
-                      
+
                       // Calculate top padding to ensure content fits
                       final topPadding = isVeryCompact
                           ? 8.0
                           : (isExpanded ? 50.0 : 20.0);
-                      final bottomPadding = isVeryCompact ? 4.0 : (isExpanded ? 12.0 : 4.0);
+                      final bottomPadding = isVeryCompact
+                          ? 4.0
+                          : (isExpanded ? 12.0 : 4.0);
 
                       return Padding(
                         padding: EdgeInsets.only(
@@ -182,7 +196,9 @@ class _AddClientScreenState extends State<AddClientScreen> {
                             if (spacing > 0) SizedBox(height: spacing),
                             Flexible(
                               child: Text(
-                                widget.client == null ? 'Add Client' : 'Edit Client',
+                                widget.client == null
+                                    ? 'Add Client'
+                                    : 'Edit Client',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: titleSize,
@@ -296,6 +312,35 @@ class _AddClientScreenState extends State<AddClientScreen> {
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return l10n.pleaseEnterClientName;
+                          }
+                          return null;
+                        },
+                      ),
+                      isSmallScreen: isSmallScreen,
+                    ),
+                    SizedBox(height: isSmallScreen ? 16 : 20),
+
+                    // Project Name Card
+                    _buildFieldCard(
+                      context,
+                      title: l10n.projectName,
+                      icon: Icons.work_outline_rounded,
+                      iconColor: Colors.deepPurple,
+                      child: TextFormField(
+                        controller: _projectNameController,
+                        style: const TextStyle(fontSize: 16),
+                        decoration: InputDecoration(
+                          hintText: l10n.enterProjectName,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 12,
+                          ),
+                        ),
+                        textCapitalization: TextCapitalization.words,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return l10n.enterProjectName;
                           }
                           return null;
                         },
@@ -440,10 +485,7 @@ class _AddClientScreenState extends State<AddClientScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.grey.shade200,
-          width: 1,
-        ),
+        border: Border.all(color: Colors.grey.shade200, width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -478,7 +520,8 @@ class _AddClientScreenState extends State<AddClientScreen> {
                     children: [
                       Text(
                         title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: isSmallScreen ? 15 : 16,
                             ),

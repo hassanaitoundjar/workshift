@@ -27,8 +27,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
   bool _isGenerating = false;
 
   // Get start and end dates from selected month
-  DateTime get _startDate => DateTime(_selectedMonth.year, _selectedMonth.month, 1);
-  DateTime get _endDate => DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
+  DateTime get _startDate =>
+      DateTime(_selectedMonth.year, _selectedMonth.month, 1);
+  DateTime get _endDate =>
+      DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +42,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
     // Get shifts for selected employee
     List<Shift> shifts = [];
     if (_selectedEmployee != null) {
-      shifts = dbProvider.getShiftsByEmployee(_selectedEmployee!.id)
-          .where((shift) =>
-              shift.date.isAfter(_startDate.subtract(const Duration(days: 1))) &&
-              shift.date.isBefore(_endDate.add(const Duration(days: 1))))
+      shifts = dbProvider
+          .getShiftsByEmployee(_selectedEmployee!.id)
+          .where(
+            (shift) =>
+                shift.date.isAfter(
+                  _startDate.subtract(const Duration(days: 1)),
+                ) &&
+                shift.date.isBefore(_endDate.add(const Duration(days: 1))),
+          )
           .toList();
     }
 
@@ -144,7 +151,9 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                   child: Text(
                                     l10n.generateEmployeeReports,
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.9),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
+                                      ),
                                       fontSize: 14,
                                     ),
                                     maxLines: 1,
@@ -170,27 +179,57 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Employee Selection
-                    _buildSectionHeader(context, l10n.selectEmployee, Icons.person_rounded, isSmallScreen),
+                    _buildSectionHeader(
+                      context,
+                      l10n.selectEmployee,
+                      Icons.person_rounded,
+                      isSmallScreen,
+                    ),
                     const SizedBox(height: 12),
-                    _buildEmployeeSelector(context, dbProvider, employees, isSmallScreen),
+                    _buildEmployeeSelector(
+                      context,
+                      dbProvider,
+                      employees,
+                      isSmallScreen,
+                    ),
                     const SizedBox(height: 24),
 
                     // Month Selection
-                    _buildSectionHeader(context, l10n.selectMonth, Icons.calendar_month_rounded, isSmallScreen),
+                    _buildSectionHeader(
+                      context,
+                      l10n.selectMonth,
+                      Icons.calendar_month_rounded,
+                      isSmallScreen,
+                    ),
                     const SizedBox(height: 12),
                     _buildMonthSelector(context, isSmallScreen),
                     const SizedBox(height: 24),
 
                     // Report Summary
                     if (_selectedEmployee != null) ...[
-                      _buildSectionHeader(context, l10n.reportSummary, Icons.summarize_rounded, isSmallScreen),
+                      _buildSectionHeader(
+                        context,
+                        l10n.reportSummary,
+                        Icons.summarize_rounded,
+                        isSmallScreen,
+                      ),
                       const SizedBox(height: 12),
-                      _buildReportSummary(context, shifts, _selectedEmployee!, isSmallScreen),
+                      _buildReportSummary(
+                        context,
+                        shifts,
+                        _selectedEmployee!,
+                        isSmallScreen,
+                      ),
                       const SizedBox(height: 24),
                     ],
 
                     // Action Buttons
-                    _buildSectionHeader(context, l10n.exportOptions, Icons.file_download_rounded, isSmallScreen),
+                    _buildSectionHeader(
+                      context,
+                      l10n.exportOptions,
+                      Icons.file_download_rounded,
+                      isSmallScreen,
+                    ),
                     const SizedBox(height: 12),
                     if (_selectedEmployee == null)
                       Container(
@@ -202,7 +241,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.info_outline_rounded, color: Colors.grey.shade600),
+                            Icon(
+                              Icons.info_outline_rounded,
+                              color: Colors.grey.shade600,
+                            ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
@@ -222,7 +264,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               l10n.downloadExcel,
                               Icons.file_download_rounded,
                               AppTheme.accentColor,
-                              () => _generateExcelReport(shifts, _selectedEmployee!),
+                              () => _generateExcelReport(
+                                shifts,
+                                _selectedEmployee!,
+                              ),
                               isSmallScreen,
                             ),
                           ),
@@ -233,7 +278,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                               l10n.sharePdf,
                               Icons.share_rounded,
                               AppTheme.primaryColor,
-                              () => _generateAndSharePDF(shifts, _selectedEmployee!),
+                              () => _generateAndSharePDF(
+                                shifts,
+                                _selectedEmployee!,
+                              ),
                               isSmallScreen,
                             ),
                           ),
@@ -251,7 +299,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, IconData icon, bool isSmallScreen) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    IconData icon,
+    bool isSmallScreen,
+  ) {
     return Row(
       children: [
         Container(
@@ -260,15 +313,19 @@ class _ReportsScreenState extends State<ReportsScreen> {
             color: AppTheme.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: AppTheme.primaryColor, size: isSmallScreen ? 18 : 20),
+          child: Icon(
+            icon,
+            color: AppTheme.primaryColor,
+            size: isSmallScreen ? 18 : 20,
+          ),
         ),
         SizedBox(width: isSmallScreen ? 10 : 12),
         Text(
           title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: isSmallScreen ? 18 : null,
-              ),
+            fontWeight: FontWeight.bold,
+            fontSize: isSmallScreen ? 18 : null,
+          ),
         ),
       ],
     );
@@ -318,19 +375,23 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _selectedEmployee?.name ?? AppLocalizations.of(context)!.selectEmployee,
+                      _selectedEmployee?.name ??
+                          AppLocalizations.of(context)!.selectEmployee,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: _selectedEmployee == null ? Colors.grey.shade600 : Colors.black,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color: _selectedEmployee == null
+                            ? Colors.grey.shade600
+                            : Colors.black,
+                      ),
                     ),
-                    if (_selectedEmployee != null && _selectedEmployee!.phone != null) ...[
+                    if (_selectedEmployee != null &&
+                        _selectedEmployee!.phone != null) ...[
                       const SizedBox(height: 4),
                       Text(
                         _selectedEmployee!.phone!,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey.shade600,
-                            ),
+                          color: Colors.grey.shade600,
+                        ),
                       ),
                     ],
                   ],
@@ -418,7 +479,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
     final totalDays = shifts.length;
     final totalEarnings = shifts.fold<double>(
       0,
-      (sum, shift) => sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
+      (sum, shift) =>
+          sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
     );
     final totalAdvances = shifts.fold<double>(
       0,
@@ -469,7 +531,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   children: [
                     Text(
                       l10n.totalEarnings,
-                      style: const TextStyle(color: Colors.white70, fontSize: 13),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 13,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -490,7 +555,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   children: [
                     Text(
                       l10n.totalAdvances,
-                      style: const TextStyle(color: Colors.white70, fontSize: 13),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 13,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -521,7 +589,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: balance >= 0
                       ? Colors.green.withValues(alpha: 0.3)
@@ -591,7 +662,11 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     ),
                   )
                 else
-                  Icon(icon, color: Colors.white, size: isSmallScreen ? 20 : 24),
+                  Icon(
+                    icon,
+                    color: Colors.white,
+                    size: isSmallScreen ? 20 : 24,
+                  ),
                 SizedBox(width: isSmallScreen ? 8 : 12),
                 Flexible(
                   child: Text(
@@ -621,380 +696,569 @@ class _ReportsScreenState extends State<ReportsScreen> {
       builder: (context) {
         final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(l10n.selectMonth),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Year selector
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.chevron_left_rounded),
-                    onPressed: () {
-                      setState(() {
-                        _selectedMonth = DateTime(currentYear - 1, currentMonth);
-                      });
-                      Navigator.pop(context);
-                      _showMonthPicker(context);
-                    },
-                  ),
-                  Text(
-                    currentYear.toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Text(l10n.selectMonth),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Year selector
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.chevron_left_rounded),
+                      onPressed: () {
+                        setState(() {
+                          _selectedMonth = DateTime(
+                            currentYear - 1,
+                            currentMonth,
+                          );
+                        });
+                        Navigator.pop(context);
+                        _showMonthPicker(context);
+                      },
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.chevron_right_rounded),
-                    onPressed: () {
-                      setState(() {
-                        _selectedMonth = DateTime(currentYear + 1, currentMonth);
-                      });
-                      Navigator.pop(context);
-                      _showMonthPicker(context);
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Month grid
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
+                    Text(
+                      currentYear.toString(),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.chevron_right_rounded),
+                      onPressed: () {
+                        setState(() {
+                          _selectedMonth = DateTime(
+                            currentYear + 1,
+                            currentMonth,
+                          );
+                        });
+                        Navigator.pop(context);
+                        _showMonthPicker(context);
+                      },
+                    ),
+                  ],
                 ),
-                itemCount: 12,
-                itemBuilder: (context, index) {
-                  final month = index + 1;
-                  final isSelected = month == currentMonth;
-                  final monthName = DateFormat('MMM').format(DateTime(currentYear, month));
+                const SizedBox(height: 16),
+                // Month grid
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemCount: 12,
+                  itemBuilder: (context, index) {
+                    final month = index + 1;
+                    final isSelected = month == currentMonth;
+                    final monthName = DateFormat(
+                      'MMM',
+                    ).format(DateTime(currentYear, month));
 
-                  return InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedMonth = DateTime(currentYear, month);
-                      });
-                      Navigator.pop(context);
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppTheme.primaryColor
-                            : Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          _selectedMonth = DateTime(currentYear, month);
+                        });
+                        Navigator.pop(context);
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        decoration: BoxDecoration(
                           color: isSelected
                               ? AppTheme.primaryColor
-                              : Colors.grey.shade300,
-                          width: isSelected ? 2 : 1,
+                              : Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppTheme.primaryColor
+                                : Colors.grey.shade300,
+                            width: isSelected ? 2 : 1,
+                          ),
                         ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          monthName,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: isSelected ? Colors.white : Colors.black87,
-                            fontSize: 14,
+                        child: Center(
+                          child: Text(
+                            monthName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: isSelected ? Colors.white : Colors.black87,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
-          ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.cancel),
+            ),
+          ],
         );
       },
     );
   }
 
-  void _showEmployeeDialog(BuildContext context, DatabaseProvider dbProvider, List<Employee> employees) {
+  void _showEmployeeDialog(
+    BuildContext context,
+    DatabaseProvider dbProvider,
+    List<Employee> employees,
+  ) {
     showDialog(
       context: context,
       builder: (context) {
         final l10n = AppLocalizations.of(context)!;
         return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(l10n.selectEmployee),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: employees.isEmpty
-              ? Center(child: Text(l10n.noEmployeesAvailable))
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: employees.length,
-                  itemBuilder: (context, index) {
-                    final employee = employees[index];
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
-                        child: Text(
-                          employee.name[0].toUpperCase(),
-                          style: const TextStyle(
-                            color: AppTheme.primaryColor,
-                            fontWeight: FontWeight.bold,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Text(l10n.selectEmployee),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: employees.isEmpty
+                ? Center(child: Text(l10n.noEmployeesAvailable))
+                : ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: employees.length,
+                    itemBuilder: (context, index) {
+                      final employee = employees[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: AppTheme.primaryColor.withValues(
+                            alpha: 0.1,
+                          ),
+                          child: Text(
+                            employee.name[0].toUpperCase(),
+                            style: const TextStyle(
+                              color: AppTheme.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                      ),
-                      title: Text(employee.name),
-                      subtitle: employee.phone != null ? Text(employee.phone!) : null,
-                      onTap: () {
-                        setState(() {
-                          _selectedEmployee = employee;
-                        });
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.cancel),
+                        title: Text(employee.name),
+                        subtitle: employee.phone != null
+                            ? Text(employee.phone!)
+                            : null,
+                        onTap: () {
+                          setState(() {
+                            _selectedEmployee = employee;
+                          });
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
           ),
-        ],
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.cancel),
+            ),
+          ],
         );
       },
     );
   }
 
-  Future<void> _generateExcelReport(List<Shift> shifts, Employee employee) async {
+  Future<void> _generateExcelReport(
+    List<Shift> shifts,
+    Employee employee,
+  ) async {
     final l10n = AppLocalizations.of(context)!;
     setState(() => _isGenerating = true);
+    final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
 
     try {
       final excel = Excel.createExcel();
-      
-      // Use the default sheet that's created
-      final sheet = excel['Sheet1'];
+      // Excel 4.x creates a default sheet usually named 'Sheet1'
+      // We can use it directly or rename it.
+      // Let's try to rename 'Sheet1' to our desired name.
+      final String defaultSheet = excel.getDefaultSheet() ?? 'Sheet1';
+      final String sheetName =
+          'Report ${DateFormat('MMM yyyy').format(_selectedMonth)}';
 
-      final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
-
-      // Calculate monthly summary
-      final workDays = shifts.where((s) => s.shiftType != ShiftType.off).length;
-      final offDays = shifts.where((s) => s.shiftType == ShiftType.off).length;
-      final totalEarnings = shifts.fold<double>(
-        0,
-        (sum, shift) => sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
-      );
-      final totalAdvances = shifts.fold<double>(
-        0,
-        (sum, shift) => sum + shift.advanceMoney,
-      );
-      final totalPay = totalEarnings - totalAdvances;
-      
-      // Calculate total work days by client
-      final workDaysByClient = <String, int>{};
-      for (var shift in shifts.where((s) => s.shiftType != ShiftType.off)) {
-        if (shift.clientId != null) {
-          final client = dbProvider.getClient(shift.clientId!);
-          final clientName = client?.name ?? l10n.na;
-          final dateKey = DateTime(shift.date.year, shift.date.month, shift.date.day);
-          workDaysByClient.putIfAbsent('$clientName-${dateKey.toString()}', () => 0);
-          workDaysByClient['$clientName-${dateKey.toString()}'] = 1;
-        }
+      // Rename safe approach: check if renaming is supported without crashing
+      // If renaming crashes, we will just use the default sheet with the default name
+      // but we will try to rename it.
+      try {
+        excel.rename(defaultSheet, sheetName);
+      } catch (e) {
+        // If rename fails, we just use the default sheet
+        debugPrint('Could not rename sheet: $e');
       }
-      final totalWorkDaysByClient = workDaysByClient.length;
 
-      // Group ALL shifts by date (including off days)
+      // Get the sheet (either renamed or original)
+      final sheet = excel[sheetName];
+
+      // --- Styles ---
+      final titleStyle = CellStyle(
+        fontFamily: getFontFamily(FontFamily.Arial),
+        fontSize: 14,
+        bold: true,
+        fontColorHex: ExcelColor.fromHexString('#1F4E78'), // Dark Blue
+      );
+      // ..horizontalAlign = HorizontalAlign.Left
+      // ..verticalAlign = VerticalAlign.Center;
+
+      final headerStyle = CellStyle(
+        fontFamily: getFontFamily(FontFamily.Arial),
+        fontSize: 10,
+        bold: true,
+        backgroundColorHex: ExcelColor.fromHexString(
+          '#4472C4',
+        ), // Professional Blue
+        fontColorHex: ExcelColor.white,
+      );
+      // ..horizontalAlign = HorizontalAlign.Center
+      // ..verticalAlign = VerticalAlign.Center;
+
+      final rowStyleOdd = CellStyle(
+        fontFamily: getFontFamily(FontFamily.Arial),
+        fontSize: 10,
+        backgroundColorHex: ExcelColor.white,
+      );
+      // ..horizontalAlign = HorizontalAlign.Left
+      // ..verticalAlign = VerticalAlign.Center;
+
+      final rowStyleEven = CellStyle(
+        fontFamily: getFontFamily(FontFamily.Arial),
+        fontSize: 10,
+        backgroundColorHex: ExcelColor.fromHexString('#DDEBF7'), // Light Blue
+      );
+      // ..horizontalAlign = HorizontalAlign.Left
+      // ..verticalAlign = VerticalAlign.Center;
+
+      final dateStyleOdd = rowStyleOdd.copyWith();
+      // ..horizontalAlign = HorizontalAlign.Center;
+      final dateStyleEven = rowStyleEven.copyWith();
+      // ..horizontalAlign = HorizontalAlign.Center;
+      final numberStyleOdd = rowStyleOdd.copyWith();
+      // ..horizontalAlign = HorizontalAlign.Right;
+      final numberStyleEven = rowStyleEven.copyWith();
+      // ..horizontalAlign = HorizontalAlign.Right;
+
+      // --- Helper to set cell value and style safely ---
+      void setCell(int col, int row, dynamic value, CellStyle style) {
+        var cell = sheet.cell(
+          CellIndex.indexByColumnRow(columnIndex: col, rowIndex: row),
+        );
+        cell.value = value != null ? TextCellValue(value.toString()) : null;
+        cell.cellStyle = style;
+      }
+
+      // --- Header Section ---
+      sheet.appendRow([TextCellValue(l10n.employeeReport.toUpperCase())]);
+      setCell(0, 0, l10n.employeeReport.toUpperCase(), titleStyle);
+
+      sheet.appendRow([]); // Spacer
+
+      sheet.appendRow([
+        TextCellValue('${l10n.employeeLabel}: ${employee.name}'),
+        null,
+        null,
+        TextCellValue(
+          '${l10n.month}: ${DateFormat('MMMM yyyy').format(_selectedMonth)}',
+        ),
+      ]);
+
+      // Apply bold style to info row
+      final infoStyle = CellStyle(
+        fontFamily: getFontFamily(FontFamily.Arial),
+        fontSize: 10,
+        bold: true,
+      );
+      setCell(0, 2, '${l10n.employeeLabel}: ${employee.name}', infoStyle);
+      setCell(
+        3,
+        2,
+        '${l10n.month}: ${DateFormat('MMMM yyyy').format(_selectedMonth)}',
+        infoStyle,
+      );
+
+      sheet.appendRow([]); // Spacer
+
+      // --- Table Headers ---
+      final List<TextCellValue> headers = [
+        TextCellValue(l10n.date),
+        TextCellValue('Day'),
+        TextCellValue(l10n.client),
+        TextCellValue(l10n.projectName),
+        TextCellValue(l10n.shift),
+        TextCellValue(l10n.totalEarnings),
+        TextCellValue(l10n.totalAdvances),
+        TextCellValue(l10n.notes),
+      ];
+      sheet.appendRow(headers);
+
+      // Apply Header Style
+      for (int i = 0; i < headers.length; i++) {
+        setCell(i, 4, headers[i].value, headerStyle);
+      }
+
+      // --- Data Rows ---
       final allShiftsByDate = <DateTime, List<Shift>>{};
       for (var shift in shifts) {
-        final dateKey = DateTime(shift.date.year, shift.date.month, shift.date.day);
+        final dateKey = DateTime(
+          shift.date.year,
+          shift.date.month,
+          shift.date.day,
+        );
         allShiftsByDate.putIfAbsent(dateKey, () => []).add(shift);
       }
 
-      // Column headers
-      sheet.appendRow([
-        'date',
-        'employe',
-        'client',
-        'total work day month',
-        'advouce',
-        'total off day',
-        'total pay',
-        'note',
-      ]);
-      
-      // Apply header row colors
-      final headerStyle = CellStyle(
-        backgroundColorHex: '#4472C4', // Blue header
-        fontColorHex: '#FFFFFF', // White text
-        bold: true,
-      );
-      // Apply style to all 8 header columns
-      for (var i = 0; i < 8; i++) {
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0)).cellStyle = headerStyle;
-      }
-
-      // Generate all dates in the selected month
-      final allDatesInMonth = <DateTime>[];
       final firstDay = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
-      final lastDay = DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
-      
-      for (var i = 0; i <= lastDay.day - 1; i++) {
-        allDatesInMonth.add(DateTime(firstDay.year, firstDay.month, firstDay.day + i));
-      }
-      
-      // Create one row per date (including empty days)
-      int rowIndex = 1; // Start after header row
-      for (var date in allDatesInMonth) {
+      final lastDay = DateTime(
+        _selectedMonth.year,
+        _selectedMonth.month + 1,
+        0,
+      );
+      int rowIndex = 5;
+
+      for (int i = 0; i < lastDay.day; i++) {
+        final date = DateTime(firstDay.year, firstDay.month, firstDay.day + i);
         final dateKey = DateTime(date.year, date.month, date.day);
         final dayShifts = allShiftsByDate[dateKey] ?? [];
-        final workShifts = dayShifts.where((s) => s.shiftType != ShiftType.off).toList();
-        
-        // Build client string for this specific date
-        String clientString = '';
-        if (workShifts.isNotEmpty) {
-          final morningShifts = workShifts.where((s) => s.shiftType == ShiftType.morning).toList();
-          final afternoonShifts = workShifts.where((s) => s.shiftType == ShiftType.afternoon).toList();
-          final allDayShifts = workShifts.where((s) => s.shiftType == ShiftType.allDay).toList();
 
-          final parts = <String>[];
-          if (allDayShifts.isNotEmpty) {
-            for (var shift in allDayShifts) {
-              final client = shift.clientId != null ? dbProvider.getClient(shift.clientId!) : null;
-              parts.add('allday: ${client?.name ?? l10n.na}');
-            }
-          } else {
-            if (morningShifts.isNotEmpty) {
-              final clients = morningShifts.map((s) {
-                final client = s.clientId != null ? dbProvider.getClient(s.clientId!) : null;
-                return client?.name ?? l10n.na;
-              }).join(',');
-              parts.add('morning:$clients');
-            }
-            if (afternoonShifts.isNotEmpty) {
-              final clients = afternoonShifts.map((s) {
-                final client = s.clientId != null ? dbProvider.getClient(s.clientId!) : null;
-                return client?.name ?? l10n.na;
-              }).join(',');
-              parts.add('afternoon:$clients');
-            }
+        // Determine Row Style (Alternating)
+        final isEven = rowIndex % 2 == 0;
+        final rowStyle = isEven ? rowStyleEven : rowStyleOdd;
+        final dateStyle = isEven ? dateStyleEven : dateStyleOdd;
+        final numStyle = isEven ? numberStyleEven : numberStyleOdd;
+
+        if (dayShifts.isEmpty) {
+          // Empty day row
+          final rowData = [
+            TextCellValue(DateFormat('dd/MM/yyyy').format(date)),
+            TextCellValue(DateFormat('EEEE').format(date)),
+            TextCellValue('-'),
+            TextCellValue('-'),
+            TextCellValue(l10n.off),
+            TextCellValue('-'),
+            TextCellValue('-'),
+            TextCellValue('-'),
+          ];
+          sheet.appendRow(rowData);
+
+          // Apply styles
+          setCell(0, rowIndex, rowData[0].value, dateStyle);
+          setCell(1, rowIndex, rowData[1].value, rowStyle);
+          for (int c = 2; c < 8; c++) {
+            setCell(
+              c,
+              rowIndex,
+              rowData[c].value,
+              c >= 5 && c <= 6 ? numStyle : rowStyle,
+            );
           }
-          clientString = parts.join(' /');
+          rowIndex++;
+        } else {
+          for (var shift in dayShifts) {
+            final client = shift.clientId != null
+                ? dbProvider.getClient(shift.clientId!)
+                : null;
+            final dailyEarning =
+                (shift.durationInHours / 8.0) * employee.pricePerDay;
+
+            final rowData = [
+              TextCellValue(DateFormat('dd/MM/yyyy').format(date)),
+              TextCellValue(DateFormat('EEEE').format(date)),
+              TextCellValue(client?.name ?? '-'),
+              TextCellValue(client?.projectName ?? '-'),
+              TextCellValue(shift.shiftTypeName),
+              TextCellValue(dailyEarning.toStringAsFixed(2)),
+              TextCellValue(
+                shift.advanceMoney > 0
+                    ? shift.advanceMoney.toStringAsFixed(2)
+                    : '-',
+              ),
+              TextCellValue(shift.notes ?? ''),
+            ];
+
+            sheet.appendRow(rowData);
+
+            // Apply styles
+            setCell(0, rowIndex, rowData[0].value, dateStyle);
+            setCell(1, rowIndex, rowData[1].value, rowStyle);
+            setCell(2, rowIndex, rowData[2].value, rowStyle);
+            setCell(3, rowIndex, rowData[3].value, rowStyle);
+            setCell(4, rowIndex, rowData[4].value, rowStyle);
+            setCell(5, rowIndex, rowData[5].value, numStyle);
+            setCell(6, rowIndex, rowData[6].value, numStyle);
+            setCell(7, rowIndex, rowData[7].value, rowStyle);
+
+            rowIndex++;
+          }
         }
-        
-        // Get advance and notes for this specific date
-        final dayAdvance = dayShifts.fold<double>(0, (sum, s) => sum + s.advanceMoney);
-        final dayNotes = dayShifts
-            .where((s) => s.notes != null && s.notes!.isNotEmpty)
-            .map((s) => s.notes!)
-            .join('; ');
-        
-        // Data row (one row per date, including empty days)
-        sheet.appendRow([
-          DateFormat('dd/MM/yy').format(date),
-          employee.name,
-          clientString, // Empty if no shifts
-          '${workDays}day', // Monthly total (always shown)
-          dayAdvance > 0 ? '${dayAdvance.toStringAsFixed(0)}dh' : (dayShifts.isNotEmpty ? 'o' : ''), // Empty if no shifts and no advance
-          '', // Empty column
-          '${offDays}day', // Monthly total (always shown)
-          totalPay.toStringAsFixed(0), // Monthly total (always shown)
-          dayNotes.isNotEmpty ? dayNotes : (dayShifts.isNotEmpty ? '0' : ''), // Empty if no shifts
-        ]);
-        
-        // Apply column colors
-        // Column 0 (date) - Light blue
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex)).cellStyle = 
-            CellStyle(backgroundColorHex: '#D9E1F2');
-        // Column 1 (employee name) - Light green
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: rowIndex)).cellStyle = 
-            CellStyle(backgroundColorHex: '#E2EFDA');
-        // Column 2 (client) - Light yellow
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: rowIndex)).cellStyle = 
-            CellStyle(backgroundColorHex: '#FFF2CC');
-        // Column 3 (total work day month) - Light orange
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: rowIndex)).cellStyle = 
-            CellStyle(backgroundColorHex: '#FCE4D6');
-        // Column 4 (advouce) - Light pink
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: rowIndex)).cellStyle = 
-            CellStyle(backgroundColorHex: '#F4B084');
-        // Column 5 (empty) - White
-        // Column 6 (total off day) - Light purple
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 6, rowIndex: rowIndex)).cellStyle = 
-            CellStyle(backgroundColorHex: '#D9D2E9');
-        // Column 7 (total pay) - Light teal
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 7, rowIndex: rowIndex)).cellStyle = 
-            CellStyle(backgroundColorHex: '#D0E0E3');
-        // Column 8 (note) - Light gray
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: 8, rowIndex: rowIndex)).cellStyle = 
-            CellStyle(backgroundColorHex: '#F2F2F2');
-        
+      }
+
+      // --- Summary Section ---
+      sheet.appendRow([]); // Spacer
+      rowIndex++;
+
+      final totalEarnings = shifts.fold<double>(
+        0,
+        (sum, s) => sum + (s.durationInHours / 8.0) * employee.pricePerDay,
+      );
+      final totalAdvances = shifts.fold<double>(
+        0,
+        (sum, s) => sum + s.advanceMoney,
+      );
+      final netPay = totalEarnings - totalAdvances;
+
+      // Calculate Total Days (assuming 8 hours = 1 day)
+      final totalWorkDays = shifts.fold<double>(
+        0,
+        (sum, s) =>
+            sum +
+            (s.shiftType != ShiftType.off ? (s.durationInHours / 8.0) : 0),
+      );
+
+      // Header for Summary
+      sheet.appendRow([TextCellValue(l10n.reportSummary)]);
+      setCell(0, rowIndex, l10n.reportSummary, titleStyle);
+      rowIndex++;
+
+      // Summary Data
+      final summaryData = [
+        ['Total Days', totalWorkDays.toStringAsFixed(1)],
+        [l10n.totalEarnings, totalEarnings.toStringAsFixed(2)],
+        [l10n.totalAdvances, totalAdvances.toStringAsFixed(2)],
+        [l10n.balanceToPay, netPay.toStringAsFixed(2)],
+      ];
+
+      final labelStyle = CellStyle(
+        fontFamily: getFontFamily(FontFamily.Arial),
+        bold: true,
+      );
+      final valueStyle = CellStyle(fontFamily: getFontFamily(FontFamily.Arial));
+      // ..horizontalAlign = HorizontalAlign.Right;
+
+      for (var row in summaryData) {
+        final rData = [TextCellValue(row[0]), TextCellValue(row[1])];
+        sheet.appendRow(rData);
+
+        // Style Label
+        setCell(0, rowIndex, rData[0].value, labelStyle);
+        // Style Value
+        setCell(1, rowIndex, rData[1].value, valueStyle);
+
         rowIndex++;
       }
 
-      // Add summary row at the end with all totals
-      sheet.appendRow([]); // Empty row for spacing
-      rowIndex++; // Skip empty row
-      
-      // Add "Total" label row
-      sheet.appendRow([
-        'Total', // Total label
-        employee.name, // employe
-        '${totalWorkDaysByClient}day', // client name total (total work days by client)
-        '${workDays}day', // dayby month (total work days)
-        totalAdvances > 0 ? '${totalAdvances.toStringAsFixed(0)}dh' : '0', // total advounce
-        '${workDays}day', // total day (total work days)
-        '${offDays}day', // total off day
-        totalPay.toStringAsFixed(0), // total pay
-        '', // notes (empty)
-      ]);
-      
-      // Apply bold style to total row
-      final totalRowStyle = CellStyle(
-        backgroundColorHex: '#B4C6E7', // Darker blue for total row
-        fontColorHex: '#000000',
-        bold: true,
-      );
-      // Apply style to all 9 total row columns (including date column)
-      for (var i = 0; i < 9; i++) {
-        sheet.cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: rowIndex)).cellStyle = totalRowStyle;
+      // --- Client / Project Breakdown ---
+      sheet.appendRow([]); // Spacer
+      rowIndex++;
+
+      sheet.appendRow([TextCellValue('Client / Project Breakdown')]);
+      setCell(0, rowIndex, 'Client / Project Breakdown', titleStyle);
+      rowIndex++;
+
+      // Header for Breakdown
+      final breakdownHeaders = [
+        TextCellValue(l10n.client),
+        TextCellValue(l10n.projectName),
+        TextCellValue('Total Days'),
+      ];
+      sheet.appendRow(breakdownHeaders);
+      for (int i = 0; i < breakdownHeaders.length; i++) {
+        setCell(i, rowIndex, breakdownHeaders[i].value, headerStyle);
+      }
+      rowIndex++;
+
+      // Aggregate Data
+      final breakdownMap = <String, Map<String, dynamic>>{};
+
+      for (var shift in shifts) {
+        if (shift.shiftType == ShiftType.off) continue;
+
+        final client = shift.clientId != null
+            ? dbProvider.getClient(shift.clientId!)
+            : null;
+
+        // Key based on ID to ensure uniqueness, but display String
+        final key = client != null ? '${client.id}' : 'unknown';
+
+        if (!breakdownMap.containsKey(key)) {
+          breakdownMap[key] = {
+            'clientName': client?.name ?? 'Unknown',
+            'projectName': client?.projectName ?? '-',
+            'days': 0.0,
+          };
+        }
+
+        // Calculate days based on duration (assuming 8 hours = 1 day)
+        // 4 hours = 0.5 days, etc.
+        final daysToAdd = shift.durationInHours / 8.0;
+        breakdownMap[key]!['days'] += daysToAdd;
       }
 
-      // Save file - Use Downloads folder for easier access
-      final directory = Platform.isLinux 
+      // Write rows
+      int breakdownIndex = 0;
+      for (var entry in breakdownMap.values) {
+        final isEven = breakdownIndex % 2 == 0;
+        final rowStyle = isEven ? rowStyleEven : rowStyleOdd;
+
+        final bData = [
+          TextCellValue(entry['clientName']),
+          TextCellValue(entry['projectName']),
+          TextCellValue(entry['days'].toStringAsFixed(1)), // e.g. 1.0, 0.5
+        ];
+
+        sheet.appendRow(bData);
+
+        setCell(0, rowIndex, bData[0].value, rowStyle);
+        setCell(1, rowIndex, bData[1].value, rowStyle);
+        setCell(2, rowIndex, bData[2].value, rowStyle);
+
+        rowIndex++;
+        breakdownIndex++;
+      }
+
+      // Manual "Auto-Fit" by setting width for known columns
+      // In excel ^4.0.0 we use setColumnWidth with index
+      sheet.setColumnWidth(0, 15.0); // Date
+      sheet.setColumnWidth(1, 15.0); // Day
+      sheet.setColumnWidth(2, 25.0); // Client
+      sheet.setColumnWidth(3, 20.0); // Project
+      sheet.setColumnWidth(4, 15.0); // Shift
+      sheet.setColumnWidth(5, 12.0); // Earnings
+      sheet.setColumnWidth(6, 12.0); // Advances
+      sheet.setColumnWidth(7, 30.0); // Notes
+
+      // Save file logic
+      final directory = Platform.isLinux
           ? Directory('${Platform.environment['HOME']}/Downloads')
           : await getApplicationDocumentsDirectory();
-      
-      // Ensure directory exists
+
       if (!await directory.exists()) {
         await directory.create(recursive: true);
       }
-      
-      final fileName = '${employee.name}_Report_${DateFormat('yyyyMM').format(_selectedMonth)}.xlsx';
+
+      final fileName =
+          '${employee.name}_Report_${DateFormat('yyyyMM').format(_selectedMonth)}.xlsx';
       final filePath = '${directory.path}/$fileName';
       final file = File(filePath);
-      
-      // Encode and save Excel file
-      final excelBytes = excel.encode();
+
+      final excelBytes = excel.save(); // save() returns List<int>? in v4
       if (excelBytes == null) {
         throw Exception('Failed to encode Excel file');
       }
-      
+
       await file.writeAsBytes(excelBytes);
 
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Column(
@@ -1011,32 +1275,18 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 ),
               ],
             ),
-            backgroundColor: AppTheme.accentColor,
+            backgroundColor: AppTheme.successColor,
             behavior: SnackBarBehavior.floating,
             duration: const Duration(seconds: 5),
             action: SnackBarAction(
               label: l10n.open,
               textColor: Colors.white,
               onPressed: () async {
-                // Open file location in file manager
                 if (Platform.isLinux) {
                   try {
                     await Process.run('xdg-open', [directory.path]);
                   } catch (e) {
-                    // Fallback: try nautilus, dolphin, or thunar
-                    try {
-                      await Process.run('nautilus', [directory.path]);
-                    } catch (_) {
-                      try {
-                        await Process.run('dolphin', [directory.path]);
-                      } catch (_) {
-                        try {
-                          await Process.run('thunar', [directory.path]);
-                        } catch (_) {
-                          // If all fail, just show the path
-                        }
-                      }
-                    }
+                    // ignore
                   }
                 }
               },
@@ -1046,7 +1296,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${l10n.errorGeneratingExcel}: $e'),
@@ -1061,134 +1310,204 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
-  Future<void> _generateAndSharePDF(List<Shift> shifts, Employee employee) async {
+  Future<void> _generateAndSharePDF(
+    List<Shift> shifts,
+    Employee employee,
+  ) async {
     setState(() => _isGenerating = true);
 
     try {
       final l10n = AppLocalizations.of(context)!;
-      final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
+
+      // Calculations
       final totalEarnings = shifts.fold<double>(
         0,
-        (sum, shift) => sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
+        (sum, shift) =>
+            sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
       );
       final totalAdvances = shifts.fold<double>(
         0,
         (sum, shift) => sum + shift.advanceMoney,
       );
       final balance = totalEarnings - totalAdvances;
+      final totalDays = shifts.fold<double>(
+        0,
+        (sum, shift) =>
+            sum +
+            (shift.shiftType != ShiftType.off
+                ? shift.durationInHours / 8.0
+                : 0),
+      );
 
       final pdf = pw.Document();
+
+      // Theme Colors
+      final primaryColor = PdfColors.blue800;
+      final secondaryColor = PdfColors.blue50;
+
+      // Helper for Summary Card
+      pw.Widget buildStatCard(
+        String title,
+        String value,
+        PdfColor color,
+        PdfColor textColor,
+      ) {
+        return pw.Expanded(
+          child: pw.Container(
+            padding: const pw.EdgeInsets.all(10),
+            decoration: pw.BoxDecoration(
+              color: color,
+              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(6)),
+            ),
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  title,
+                  style: pw.TextStyle(color: textColor, fontSize: 9),
+                ),
+                pw.SizedBox(height: 4),
+                pw.Text(
+                  value,
+                  style: pw.TextStyle(
+                    color: textColor,
+                    fontWeight: pw.FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
 
       pdf.addPage(
         pw.MultiPage(
           pageFormat: PdfPageFormat.a4,
+          margin: const pw.EdgeInsets.all(32),
           build: (pw.Context context) {
             return [
-              // Header
-              pw.Header(
-                level: 0,
+              // --- Header ---
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: pw.CrossAxisAlignment.end,
+                children: [
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(
+                        l10n.employeeReport.toUpperCase(),
+                        style: pw.TextStyle(
+                          color: primaryColor,
+                          fontSize: 22,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                      pw.SizedBox(height: 4),
+                      pw.Text(
+                        'Period: ${DateFormat('MMMM yyyy').format(_selectedMonth)}',
+                        style: const pw.TextStyle(
+                          fontSize: 12,
+                          color: PdfColors.grey700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.end,
+                    children: [
+                      pw.Text(
+                        'Date: ${DateFormat('dd MMM yyyy').format(DateTime.now())}',
+                        style: const pw.TextStyle(
+                          fontSize: 10,
+                          color: PdfColors.grey600,
+                        ),
+                      ),
+                      pw.Text(
+                        'Shihab Falling',
+                        style: pw.TextStyle(
+                          fontSize: 10,
+                          color: primaryColor,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 10),
+              pw.Divider(color: primaryColor, thickness: 1.5),
+              pw.SizedBox(height: 20),
+
+              // --- Employee Info ---
+              pw.Container(
+                padding: const pw.EdgeInsets.all(12),
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.grey300),
+                  borderRadius: const pw.BorderRadius.all(
+                    pw.Radius.circular(6),
+                  ),
+                ),
                 child: pw.Row(
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
-                    pw.Text(
-                      l10n.employeeReport,
-                      style: pw.TextStyle(
-                        fontSize: 24,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    pw.Text(
-                      DateFormat('MMM dd, yyyy').format(DateTime.now()),
-                      style: const pw.TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-              pw.SizedBox(height: 20),
-
-              // Employee Info
-              pw.Container(
-                padding: const pw.EdgeInsets.all(16),
-                decoration: pw.BoxDecoration(
-                  border: pw.Border.all(color: PdfColors.grey300),
-                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
-                ),
-                child: pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Text(
-                      '${l10n.employeeLabel}: ${employee.name}',
-                      style: pw.TextStyle(
-                        fontSize: 16,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    if (employee.phone != null)
-                      pw.Text(
-                        '${l10n.phone}: ${employee.phone}',
-                        style: const pw.TextStyle(fontSize: 12),
-                      ),
-                    pw.Text(
-                      '${l10n.month}: ${DateFormat('MMMM yyyy').format(_selectedMonth)}',
-                      style: const pw.TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-              pw.SizedBox(height: 20),
-
-              // Summary
-              pw.Container(
-                padding: const pw.EdgeInsets.all(16),
-                decoration: pw.BoxDecoration(
-                  color: PdfColors.blue50,
-                  borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
-                ),
-                child: pw.Column(
-                  children: [
                     pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                       children: [
-                        pw.Text('${l10n.totalShifts}:', style: const pw.TextStyle(fontSize: 14)),
-                        pw.Text(
-                          '${shifts.length}',
-                          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+                        pw.Container(
+                          width: 30,
+                          height: 30,
+                          decoration: pw.BoxDecoration(
+                            color: secondaryColor,
+                            shape: pw.BoxShape.circle,
+                          ),
+                          child: pw.Center(
+                            child: pw.Text(
+                              employee.name[0].toUpperCase(),
+                              style: pw.TextStyle(
+                                color: primaryColor,
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        pw.SizedBox(width: 10),
+                        pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text(
+                              employee.name,
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            if (employee.phone != null)
+                              pw.Text(
+                                employee.phone!,
+                                style: const pw.TextStyle(
+                                  fontSize: 10,
+                                  color: PdfColors.grey600,
+                                ),
+                              ),
+                          ],
                         ),
                       ],
                     ),
-                    pw.SizedBox(height: 8),
-                    pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.end,
                       children: [
-                        pw.Text('${l10n.totalEarnings}:', style: const pw.TextStyle(fontSize: 14)),
                         pw.Text(
-                          '${totalEarnings.toStringAsFixed(2)} MAD',
-                          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+                          'Daily Rate',
+                          style: const pw.TextStyle(
+                            fontSize: 9,
+                            color: PdfColors.grey600,
+                          ),
                         ),
-                      ],
-                    ),
-                    pw.SizedBox(height: 8),
-                    pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                      children: [
-                        pw.Text('${l10n.totalAdvances}:', style: const pw.TextStyle(fontSize: 14)),
                         pw.Text(
-                          '${totalAdvances.toStringAsFixed(2)} MAD',
-                          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    pw.SizedBox(height: 8),
-                    pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                      children: [
-                        pw.Text('${l10n.balanceToPay}:', style: const pw.TextStyle(fontSize: 14)),
-                        pw.Text(
-                          '${balance.toStringAsFixed(2)} MAD',
+                          '${employee.pricePerDay.toStringAsFixed(0)} MAD',
                           style: pw.TextStyle(
-                            fontSize: 14,
                             fontWeight: pw.FontWeight.bold,
-                            color: balance >= 0 ? PdfColors.green : PdfColors.red,
+                            fontSize: 14,
                           ),
                         ),
                       ],
@@ -1198,60 +1517,85 @@ class _ReportsScreenState extends State<ReportsScreen> {
               ),
               pw.SizedBox(height: 20),
 
-              // Shifts Table
-              pw.Table(
-                border: pw.TableBorder.all(color: PdfColors.grey300),
+              // --- Summary Stats ---
+              pw.Row(
                 children: [
-                  // Header row
-                  pw.TableRow(
-                    decoration: const pw.BoxDecoration(color: PdfColors.grey200),
+                  buildStatCard(
+                    'Total Days',
+                    totalDays.toStringAsFixed(1),
+                    PdfColors.blue50,
+                    PdfColors.blue800,
+                  ),
+                  pw.SizedBox(width: 10),
+                  buildStatCard(
+                    l10n.totalEarnings,
+                    '${totalEarnings.toStringAsFixed(0)}', // MAD removed for space or added below
+                    PdfColors.green50,
+                    PdfColors.green800,
+                  ),
+                  pw.SizedBox(width: 10),
+                  buildStatCard(
+                    l10n.totalAdvances,
+                    '${totalAdvances.toStringAsFixed(0)}',
+                    PdfColors.orange50,
+                    PdfColors.orange800,
+                  ),
+                  pw.SizedBox(width: 10),
+                  buildStatCard(
+                    l10n.balanceToPay,
+                    '${balance.toStringAsFixed(0)}',
+                    primaryColor,
+                    PdfColors.white,
+                  ),
+                ],
+              ),
+              pw.SizedBox(height: 30),
+
+              // --- Detailed Table ---
+
+              // --- Footer / Signatures ---
+              pw.SizedBox(height: 40),
+              pw.Divider(color: PdfColors.grey300),
+              pw.SizedBox(height: 10),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text(l10n.date, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      pw.Text(
+                        'Employee Signature: ${employee.name}',
+                        style: const pw.TextStyle(
+                          color: PdfColors.grey700,
+                          fontSize: 10,
+                        ),
                       ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text(l10n.shift, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text(l10n.client, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(8),
-                        child: pw.Text(l10n.totalEarnings, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                      pw.SizedBox(height: 30),
+                      pw.Container(
+                        width: 100,
+                        height: 1,
+                        color: PdfColors.grey400,
                       ),
                     ],
                   ),
-                  // Data rows
-                  ...shifts.map((shift) {
-                    final client = shift.clientId != null
-                        ? dbProvider.getClient(shift.clientId!)
-                        : null;
-                    final earnings = (shift.durationInHours / 8.0) * employee.pricePerDay;
-
-                    return pw.TableRow(
-                      children: [
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text(DateFormat('MMM dd').format(shift.date)),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(
+                        'Manager Signature: Laabi Shihab',
+                        style: const pw.TextStyle(
+                          color: PdfColors.grey700,
+                          fontSize: 10,
                         ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text(shift.shiftTypeName),
-                        ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text(client?.name ?? l10n.na),
-                        ),
-                        pw.Padding(
-                          padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text('${earnings.toStringAsFixed(2)} MAD'),
-                        ),
-                      ],
-                    );
-                  }),
+                      ),
+                      pw.SizedBox(height: 30),
+                      pw.Container(
+                        width: 100,
+                        height: 1,
+                        color: PdfColors.grey400,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ];
@@ -1262,7 +1606,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
       // Share PDF
       await Printing.sharePdf(
         bytes: await pdf.save(),
-        filename: '${employee.name}_Report_${DateFormat('yyyyMM').format(_selectedMonth)}.pdf',
+        filename:
+            '${employee.name}_Report_${DateFormat('yyyyMM').format(_selectedMonth)}.pdf',
       );
 
       if (mounted) {
@@ -1292,4 +1637,3 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 }
-

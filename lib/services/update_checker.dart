@@ -29,13 +29,19 @@ class AppVersion {
 }
 
 class UpdateChecker {
-  // GitHub Raw URL for version check
-  // The version.json file should be in the root of your repository
+  // Version check URL - Can be hosted on:
+  // - Firebase Hosting (recommended): https://your-project.web.app/version.json
+  // - Netlify: https://your-site.netlify.app/version.json
+  // - Vercel: https://your-site.vercel.app/version.json
+  // - GitHub Raw: https://raw.githubusercontent.com/user/repo/main/version.json
+  // - Your own server: https://yourdomain.com/version.json
   static const String versionCheckUrl = 
       'https://raw.githubusercontent.com/hassanaitoundjar/workshift/main/version.json';
   
-  // Alternative: Use a simple JSON file hosted anywhere
-  // Example: 'https://yourdomain.com/api/version.json'
+  // To use Firebase Hosting (better option):
+  // 1. Run: ./setup_firebase_hosting.sh
+  // 2. Deploy: firebase deploy --only hosting
+  // 3. Change URL to: 'https://your-project-id.web.app/version.json'
 
   /// Check if a new version is available
   static Future<AppVersion?> checkForUpdate() async {

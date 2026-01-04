@@ -46,7 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
           slivers: [
             // Modern App Bar with Gradient
             SliverAppBar(
-              expandedHeight: isSmallScreen ? 140 : isMediumScreen ? 180 : 200,
+              expandedHeight: isSmallScreen
+                  ? 140
+                  : isMediumScreen
+                  ? 180
+                  : 200,
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
@@ -74,7 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             if (!isCollapsed) ...[
                               const SizedBox(height: 4),
                               Text(
-                                DateFormat('EEEE, MMM dd').format(DateTime.now()),
+                                DateFormat(
+                                  'EEEE, MMM dd',
+                                ).format(DateTime.now()),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.white.withValues(alpha: 0.9),
@@ -108,9 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       final cardWidth = isSmallScreen
                           ? (constraints.maxWidth - 12) / 2
                           : isMediumScreen
-                              ? (constraints.maxWidth - 24) / 3
-                              : (constraints.maxWidth - 36) / 4;
-                      
+                          ? (constraints.maxWidth - 24) / 3
+                          : (constraints.maxWidth - 36) / 4;
+
                       return Wrap(
                         spacing: isSmallScreen ? 10 : 12,
                         runSpacing: isSmallScreen ? 10 : 12,
@@ -190,7 +196,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       l10n.employeeStatistics,
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: isSmallScreen ? 18 : null,
                           ),
@@ -205,9 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       label: Text(
                         l10n.viewAll,
-                        style: TextStyle(
-                          fontSize: isSmallScreen ? 13 : null,
-                        ),
+                        style: TextStyle(fontSize: isSmallScreen ? 13 : null),
                       ),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.symmetric(
@@ -264,6 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: EmployeeStatsCard(
                               employee: employee,
                               isSmallScreen: isSmallScreen,
+                              selectedDate: _focusedDay,
                             ),
                           ),
                         ),
@@ -288,9 +294,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   l10n.scheduleCalendar,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: isSmallScreen ? 18 : null,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: isSmallScreen ? 18 : null,
+                  ),
                 ),
               ),
             ),

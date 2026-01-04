@@ -26,6 +26,7 @@ class ClientAdapter extends TypeAdapter<Client> {
       isActive: fields[6] as bool,
       category: fields[7] as String?,
       notes: fields[8] as String?,
+      projectName: fields[10] as String?,
       createdAt: fields[9] as DateTime?,
     );
   }
@@ -33,7 +34,7 @@ class ClientAdapter extends TypeAdapter<Client> {
   @override
   void write(BinaryWriter writer, Client obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class ClientAdapter extends TypeAdapter<Client> {
       ..writeByte(8)
       ..write(obj.notes)
       ..writeByte(9)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(10)
+      ..write(obj.projectName);
   }
 
   @override

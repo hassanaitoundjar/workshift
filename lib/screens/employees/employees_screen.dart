@@ -41,11 +41,25 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       }).toList();
     }
 
-    // Calculate total stats
-    final totalShifts = employees.fold<int>(
-      0,
-      (sum, emp) => sum + dbProvider.getShiftsByEmployee(emp.id).length,
-    );
+    // Calculate total stats for current month
+    final now = DateTime.now();
+    final currentMonthStart = DateTime(now.year, now.month, 1);
+    final currentMonthEnd = DateTime(now.year, now.month + 1, 0);
+
+    final totalDays = employees.fold<double>(0, (sum, emp) {
+      final allShifts = dbProvider.getShiftsByEmployee(emp.id);
+      final currentMonthDays = allShifts
+          .where((shift) {
+            return shift.date.isAfter(
+                  currentMonthStart.subtract(const Duration(days: 1)),
+                ) &&
+                shift.date.isBefore(
+                  currentMonthEnd.add(const Duration(days: 1)),
+                );
+          })
+          .fold<double>(0, (sum, shift) => sum + (shift.durationInHours / 8.0));
+      return sum + currentMonthDays;
+    });
 
     return Scaffold(
       body: SafeArea(
@@ -53,7 +67,11 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           slivers: [
             // Modern App Bar with Stats
             SliverAppBar(
-              expandedHeight: isSmallScreen ? 200 : isMediumScreen ? 240 : 260,
+              expandedHeight: isSmallScreen
+                  ? 200
+                  : isMediumScreen
+                  ? 240
+                  : 260,
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
@@ -102,7 +120,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                       flex: isSmallScreen ? 3 : 2,
                                       child: _buildEmployeeStatCard(
                                         employees.length,
-                                        totalShifts,
+                                        totalDays,
                                         isSmallScreen,
                                         l10n,
                                       ),
@@ -110,7 +128,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                                     SizedBox(width: isSmallScreen ? 8 : 12),
                                     Expanded(
                                       child: _buildShiftStatCard(
-                                        totalShifts,
+                                        totalDays,
                                         isSmallScreen,
                                         l10n,
                                       ),
@@ -127,7 +145,9 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               actions: [
                 IconButton(
                   icon: Icon(
-                    _isGridView ? Icons.view_list_rounded : Icons.grid_view_rounded,
+                    _isGridView
+                        ? Icons.view_list_rounded
+                        : Icons.grid_view_rounded,
                     color: Colors.white,
                   ),
                   onPressed: () {
@@ -166,10 +186,16 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     decoration: InputDecoration(
                       hintText: l10n.searchEmployeesByName,
                       hintStyle: TextStyle(color: Colors.grey.shade400),
-                      prefixIcon: Icon(Icons.search_rounded, color: Colors.grey.shade600),
+                      prefixIcon: Icon(
+                        Icons.search_rounded,
+                        color: Colors.grey.shade600,
+                      ),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
-                              icon: Icon(Icons.clear_rounded, color: Colors.grey.shade600),
+                              icon: Icon(
+                                Icons.clear_rounded,
+                                color: Colors.grey.shade600,
+                              ),
                               onPressed: () {
                                 setState(() {
                                   _searchQuery = '';
@@ -211,7 +237,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         _searchQuery.isEmpty
                             ? l10n.allEmployees
                             : '${employees.length} ${employees.length != 1 ? l10n.results : l10n.result}',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: Colors.grey.shade700,
                               fontSize: isSmallScreen ? 15 : null,
@@ -274,7 +301,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         _searchQuery.isEmpty
                             ? l10n.noEmployees
                             : l10n.noEmployeesFound,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey.shade700,
                             ),
@@ -285,8 +313,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                             ? l10n.startByAddingFirstEmployee
                             : l10n.tryDifferentSearchTerm,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey.shade600,
-                            ),
+                          color: Colors.grey.shade600,
+                        ),
                       ),
                     ],
                   ),
@@ -302,8 +330,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     crossAxisCount: isSmallScreen
                         ? 2
                         : isMediumScreen
-                            ? 3
-                            : 4,
+                        ? 3
+                        : 4,
                     childAspectRatio: isSmallScreen ? 0.75 : 0.8,
                     crossAxisSpacing: isSmallScreen ? 10 : 12,
                     mainAxisSpacing: isSmallScreen ? 10 : 12,
@@ -315,8 +343,8 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                       columnCount: isSmallScreen
                           ? 2
                           : isMediumScreen
-                              ? 3
-                              : 4,
+                          ? 3
+                          : 4,
                       child: ScaleAnimation(
                         child: FadeInAnimation(
                           child: EmployeeCard(
@@ -371,7 +399,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     );
   }
 
-  Widget _buildEmployeeStatCard(int totalEmployees, int totalShifts, bool isSmallScreen, AppLocalizations l10n) {
+  Widget _buildEmployeeStatCard(
+    int totalEmployees,
+    double totalDays,
+    bool isSmallScreen,
+    AppLocalizations l10n,
+  ) {
     return Container(
       padding: EdgeInsets.all(isSmallScreen ? 14 : 18),
       decoration: BoxDecoration(
@@ -413,7 +446,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
           ),
           SizedBox(height: isSmallScreen ? 4 : 6),
           Text(
-            '$totalShifts ${l10n.totalShiftsLabel} • $totalEmployees ${l10n.active}',
+            '${totalDays % 1 == 0 ? totalDays.toInt() : totalDays.toStringAsFixed(1)} Days (Month) • $totalEmployees ${l10n.active}',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.9),
               fontSize: isSmallScreen ? 10 : 12,
@@ -424,7 +457,11 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     );
   }
 
-  Widget _buildShiftStatCard(int totalShifts, bool isSmallScreen, AppLocalizations l10n) {
+  Widget _buildShiftStatCard(
+    double totalDays,
+    bool isSmallScreen,
+    AppLocalizations l10n,
+  ) {
     return Container(
       padding: EdgeInsets.all(isSmallScreen ? 14 : 18),
       decoration: BoxDecoration(
@@ -447,13 +484,15 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.work_rounded,
+            Icons.calendar_today_rounded,
             color: Colors.white,
             size: isSmallScreen ? 28 : 32,
           ),
-          SizedBox(height: isSmallScreen ? 8 : 12),
+          SizedBox(height: isSmallScreen ? 4 : 8),
           Text(
-            totalShifts.toString(),
+            totalDays % 1 == 0
+                ? totalDays.toInt().toString()
+                : totalDays.toStringAsFixed(1),
             style: TextStyle(
               color: Colors.white,
               fontSize: isSmallScreen ? 28 : 36,
@@ -461,14 +500,17 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               height: 1,
             ),
           ),
-          SizedBox(height: isSmallScreen ? 4 : 6),
+          SizedBox(height: isSmallScreen ? 2 : 4),
           Text(
-            l10n.shifts,
+            'Days (Month)',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.9),
-              fontSize: isSmallScreen ? 11 : 13,
+              fontSize: isSmallScreen ? 10 : 12,
               fontWeight: FontWeight.w500,
             ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

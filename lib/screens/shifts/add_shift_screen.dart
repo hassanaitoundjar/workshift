@@ -63,9 +63,9 @@ class _AddShiftScreenState extends State<AddShiftScreen> {
 
     if (_selectedEmployee == null) {
       final l10n = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.pleaseSelectEmployee)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.pleaseSelectEmployee)));
       return;
     }
 
@@ -96,21 +96,25 @@ class _AddShiftScreenState extends State<AddShiftScreen> {
         setState(() {
           _isLoading = false;
         });
-        
+
         // Get existing shift to show more specific error
-        final existingShifts = dbProvider.getShiftsByEmployee(_selectedEmployee!.id)
-            .where((s) => 
-                s.date.year == _selectedDate.year &&
-                s.date.month == _selectedDate.month &&
-                s.date.day == _selectedDate.day &&
-                s.id != shift.id)
+        final existingShifts = dbProvider
+            .getShiftsByEmployee(_selectedEmployee!.id)
+            .where(
+              (s) =>
+                  s.date.year == _selectedDate.year &&
+                  s.date.month == _selectedDate.month &&
+                  s.date.day == _selectedDate.day &&
+                  s.id != shift.id,
+            )
             .toList();
-        
+
         final l10n = AppLocalizations.of(context)!;
         String conflictMessage;
         if (existingShifts.isNotEmpty) {
           final existingShift = existingShifts.first;
-          if (existingShift.shiftType == ShiftType.allDay || shift.shiftType == ShiftType.allDay) {
+          if (existingShift.shiftType == ShiftType.allDay ||
+              shift.shiftType == ShiftType.allDay) {
             conflictMessage = l10n.cannotAddShift;
           } else if (existingShift.shiftType == shift.shiftType) {
             conflictMessage = l10n.shiftConflictDetected;
@@ -120,7 +124,7 @@ class _AddShiftScreenState extends State<AddShiftScreen> {
         } else {
           conflictMessage = l10n.shiftConflictDetected;
         }
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(conflictMessage),

@@ -9,11 +9,13 @@ import '../screens/employees/employee_detail_screen.dart';
 class EmployeeStatsCard extends StatelessWidget {
   final Employee employee;
   final bool isSmallScreen;
+  final DateTime? selectedDate;
 
   const EmployeeStatsCard({
     super.key,
     required this.employee,
     this.isSmallScreen = false,
+    this.selectedDate,
   });
 
   @override
@@ -21,8 +23,8 @@ class EmployeeStatsCard extends StatelessWidget {
     final dbProvider = Provider.of<DatabaseProvider>(context);
     final allShifts = dbProvider.getShiftsByEmployee(employee.id);
 
-    // Calculate current month stats
-    final now = DateTime.now();
+    // Calculate stats based on selected date or today
+    final now = selectedDate ?? DateTime.now();
     final currentMonthStart = DateTime(now.year, now.month, 1);
     final currentMonthEnd = DateTime(now.year, now.month + 1, 0);
 
@@ -31,22 +33,6 @@ class EmployeeStatsCard extends StatelessWidget {
             currentMonthStart.subtract(const Duration(days: 1)),
           ) &&
           shift.date.isBefore(currentMonthEnd.add(const Duration(days: 1)));
-    }).toList();
-
-    // Calculate last 15 days stats
-    final last15DaysStart = now.subtract(const Duration(days: 15));
-    final last15DaysShifts = allShifts.where((shift) {
-      return shift.date.isAfter(
-            last15DaysStart.subtract(const Duration(days: 1)),
-          ) &&
-          shift.date.isBefore(now.add(const Duration(days: 1)));
-    }).toList();
-
-    // Calculate next 15 days stats
-    final next15DaysEnd = now.add(const Duration(days: 15));
-    final next15DaysShifts = allShifts.where((shift) {
-      return shift.date.isAfter(now.subtract(const Duration(days: 1))) &&
-          shift.date.isBefore(next15DaysEnd.add(const Duration(days: 1)));
     }).toList();
 
     // Calculate total earnings based on shift durations
@@ -61,8 +47,17 @@ class EmployeeStatsCard extends StatelessWidget {
     }
 
     final monthlyEarnings = calculateEarnings(currentMonthShifts);
-    final last15DaysEarnings = calculateEarnings(last15DaysShifts);
-    final next15DaysEarnings = calculateEarnings(next15DaysShifts);
+
+    // Calculate total days based on shift durations
+    double calculateTotalDays(List<Shift> shifts) {
+      double total = 0;
+      for (var shift in shifts) {
+        total += shift.durationInHours / 8.0;
+      }
+      return total;
+    }
+
+    final monthlyDays = calculateTotalDays(currentMonthShifts);
 
     // Calculate total advances from shifts
     double calculateTotalAdvances(List<Shift> shifts) {
@@ -278,16 +273,18 @@ class EmployeeStatsCard extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      // Current Month Stats
+                      // Row 1: Days & Earnings
                       Row(
                         children: [
                           Expanded(
                             child: _buildStatItem(
                               context,
                               icon: Icons.calendar_month,
-                              label: 'This Month',
-                              value: '${currentMonthShifts.length}',
-                              subtitle: 'days',
+                              label: 'Days',
+                              value: monthlyDays % 1 == 0
+                                  ? monthlyDays.toInt().toString()
+                                  : monthlyDays.toString(),
+                              subtitle: 'worked',
                               color: AppTheme.primaryColor,
                               isSmallScreen: isSmallScreen,
                             ),
@@ -301,10 +298,10 @@ class EmployeeStatsCard extends StatelessWidget {
                             child: _buildStatItem(
                               context,
                               icon: Icons.attach_money,
-                              label: 'Total',
+                              label: 'Earnings',
                               value:
                                   '${monthlyEarnings.toStringAsFixed(0)} MAD',
-                              subtitle: 'earned',
+                              subtitle: 'gross',
                               color: AppTheme.successColor,
                               isSmallScreen: isSmallScreen,
                             ),
@@ -317,17 +314,17 @@ class EmployeeStatsCard extends StatelessWidget {
                         child: Divider(height: 1, color: Colors.grey.shade300),
                       ),
 
-                      // 15-Day Period Stats
+                      // Row 2: Advances & Net Pay
                       Row(
                         children: [
                           Expanded(
                             child: _buildStatItem(
                               context,
-                              icon: Icons.history,
-                              label: 'Last 15 Days',
-                              value: '${last15DaysShifts.length}',
-                              subtitle: 'days',
-                              color: AppTheme.secondaryColor,
+                              icon: Icons.money_off_rounded,
+                              label: 'Advances',
+                              value: '${totalAdvances.toStringAsFixed(0)} MAD',
+                              subtitle: 'taken',
+                              color: Colors.orange,
                               isSmallScreen: isSmallScreen,
                             ),
                           ),
@@ -339,51 +336,14 @@ class EmployeeStatsCard extends StatelessWidget {
                           Expanded(
                             child: _buildStatItem(
                               context,
-                              icon: Icons.attach_money,
-                              label: 'Earned',
+                              icon: Icons.account_balance_wallet_rounded,
+                              label: 'Net Pay',
                               value:
-                                  '${last15DaysEarnings.toStringAsFixed(0)} MAD',
-                              subtitle: 'total',
-                              color: AppTheme.accentColor,
-                              isSmallScreen: isSmallScreen,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Divider(height: 1, color: Colors.grey.shade300),
-                      ),
-
-                      // Next 15 Days Projection
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatItem(
-                              context,
-                              icon: Icons.upcoming,
-                              label: 'Next 15 Days',
-                              value: '${next15DaysShifts.length}',
-                              subtitle: 'days',
-                              color: AppTheme.morningShiftColor,
-                              isSmallScreen: isSmallScreen,
-                            ),
-                          ),
-                          Container(
-                            width: 1,
-                            height: 40,
-                            color: Colors.grey.shade300,
-                          ),
-                          Expanded(
-                            child: _buildStatItem(
-                              context,
-                              icon: Icons.attach_money,
-                              label: 'Expected',
-                              value:
-                                  '${next15DaysEarnings.toStringAsFixed(0)} MAD',
-                              subtitle: 'income',
-                              color: AppTheme.morningShiftColor,
+                                  '${(monthlyEarnings - totalAdvances).toStringAsFixed(0)} MAD',
+                              subtitle: 'to pay',
+                              color: (monthlyEarnings - totalAdvances) >= 0
+                                  ? AppTheme.primaryColor
+                                  : AppTheme.errorColor,
                               isSmallScreen: isSmallScreen,
                             ),
                           ),

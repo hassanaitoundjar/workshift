@@ -1,6 +1,6 @@
 {
   "@@locale": "ar",
-  "appTitle": "وردية العمل",
+  "appTitle": "Shihab Falling",
   "@appTitle": {
     "description": "The application title"
   },
@@ -19,7 +19,9 @@
   "phoneNumber": "رقم الهاتف",
   "pricePerDay": "السعر في اليوم",
   "clientName": "اسم العميل",
+  "projectName": "اسم المشروع",
   "location": "الموقع",
+  "enterProjectName": "أدخل اسم المشروع",
   "selectEmployee": "اختر موظف",
   "selectClient": "اختر عميل",
   "selectMonth": "اختر الشهر",
@@ -68,7 +70,7 @@
   "statistics": "الإحصائيات",
   "about": "حول",
   "appVersion": "إصدار التطبيق",
-  "aboutWorkShift": "حول وردية العمل",
+  "aboutWorkShift": "حول Shihab Falling",
   "optional": "اختياري",
   "required": "مطلوب",
   "createNewClient": "إنشاء عميل جديد",
@@ -105,6 +107,7 @@
   "results": "نتائج",
   "result": "نتيجة",
   "clear": "مسح",
+  "copy": "نسخ",
   "noEmployeesFound": "لم يتم العثور على موظفين",
   "startByAddingFirstEmployee": "ابدأ بإضافة أول موظف",
   "tryDifferentSearchTerm": "جرب مصطلح بحث مختلف",
@@ -168,6 +171,13 @@
   "forceUpdateRequired": "هذا التحديث مطلوب لمتابعة استخدام التطبيق.",
   "later": "لاحقًا",
   "updateNow": "تحديث الآن",
-  "cannotOpenDownloadLink": "لا يمكن فتح رابط التحميل. يرجى التحقق من اتصالك بالإنترنت."
+  "cannotOpenDownloadLink": "لا يمكن فتح رابط التحميل. يرجى التحقق من اتصالك بالإنترنت.",
+  "downloadLink": "رابط التحميل",
+  "copyUrlToOpenManually": "يرجى نسخ الرابط أدناه وفتحه في المتصفح:",
+  "urlCopied": "تم نسخ الرابط إلى الحافظة",
+  "error": "خطأ",
+  "restoreDataConfirm": "هل أنت متأكد أنك تريد استعادة البيانات من النسخة الاحتياطية؟ سيؤدي ذلك إلى استبدال جميع البيانات الحالية.",
+  "restore": "استعادة",
+  "dataRestoredSuccessfully": "تم استعادة البيانات بنجاح"
 }
 

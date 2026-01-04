@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'WorkShift';
+  String get appTitle => 'Shihab Falling';
 
   @override
   String get home => 'Home';
@@ -57,7 +57,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clientName => 'Client Name';
 
   @override
+  String get projectName => 'Project Name';
+
+  @override
   String get location => 'Location';
+
+  @override
+  String get enterProjectName => 'Enter project name';
 
   @override
   String get selectEmployee => 'Select Employee';
@@ -205,7 +211,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appVersion => 'App Version';
 
   @override
-  String get aboutWorkShift => 'About WorkShift';
+  String get aboutWorkShift => 'About Shihab Falling';
 
   @override
   String get optional => 'Optional';
@@ -315,6 +321,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clear => 'Clear';
+
+  @override
+  String get copy => 'Copy';
 
   @override
   String get noEmployeesFound => 'No employees found';
@@ -507,4 +516,27 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get cannotOpenDownloadLink =>
       'Cannot open download link. Please check your internet connection.';
+
+  @override
+  String get downloadLink => 'Download Link';
+
+  @override
+  String get copyUrlToOpenManually =>
+      'Please copy the URL below and open it in your browser:';
+
+  @override
+  String get urlCopied => 'URL copied to clipboard';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get restoreDataConfirm =>
+      'Are you sure you want to restore data from backup? This will overwrite all current data.';
+
+  @override
+  String get restore => 'Restore';
+
+  @override
+  String get dataRestoredSuccessfully => 'Data restored successfully';
 }

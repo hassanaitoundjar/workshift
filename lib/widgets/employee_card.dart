@@ -29,19 +29,27 @@ class EmployeeCard extends StatelessWidget {
   Widget _buildGridCard(BuildContext context) {
     final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
     final shifts = dbProvider.getShiftsByEmployee(employee.id);
-    
+
     // Calculate this month's earnings
     final now = DateTime.now();
     final currentMonthStart = DateTime(now.year, now.month, 1);
     final currentMonthEnd = DateTime(now.year, now.month + 1, 0);
     final currentMonthShifts = shifts.where((shift) {
-      return shift.date.isAfter(currentMonthStart.subtract(const Duration(days: 1))) &&
+      return shift.date.isAfter(
+            currentMonthStart.subtract(const Duration(days: 1)),
+          ) &&
           shift.date.isBefore(currentMonthEnd.add(const Duration(days: 1)));
     }).toList();
-    
+
     final monthlyEarnings = currentMonthShifts.fold<double>(
       0,
-      (sum, shift) => sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
+      (sum, shift) =>
+          sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
+    );
+
+    final monthlyDays = currentMonthShifts.fold<double>(
+      0,
+      (sum, shift) => sum + (shift.durationInHours / 8.0),
     );
 
     return Hero(
@@ -113,20 +121,20 @@ class EmployeeCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Name
                   Text(
                     employee.name,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Price per day
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -146,17 +154,19 @@ class EmployeeCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Stats row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _buildStatItem(
                         context,
-                        shifts.length.toString(),
-                        'Shifts',
+                        monthlyDays % 1 == 0
+                            ? monthlyDays.toInt().toString()
+                            : monthlyDays.toString(),
+                        'This Month',
                         Icons.work_rounded,
                       ),
                       Container(
@@ -184,19 +194,27 @@ class EmployeeCard extends StatelessWidget {
   Widget _buildListCard(BuildContext context) {
     final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
     final shifts = dbProvider.getShiftsByEmployee(employee.id);
-    
+
     // Calculate this month's stats
     final now = DateTime.now();
     final currentMonthStart = DateTime(now.year, now.month, 1);
     final currentMonthEnd = DateTime(now.year, now.month + 1, 0);
     final currentMonthShifts = shifts.where((shift) {
-      return shift.date.isAfter(currentMonthStart.subtract(const Duration(days: 1))) &&
+      return shift.date.isAfter(
+            currentMonthStart.subtract(const Duration(days: 1)),
+          ) &&
           shift.date.isBefore(currentMonthEnd.add(const Duration(days: 1)));
     }).toList();
-    
+
     final monthlyEarnings = currentMonthShifts.fold<double>(
       0,
-      (sum, shift) => sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
+      (sum, shift) =>
+          sum + (shift.durationInHours / 8.0) * employee.pricePerDay,
+    );
+
+    final monthlyDays = currentMonthShifts.fold<double>(
+      0,
+      (sum, shift) => sum + (shift.durationInHours / 8.0),
     );
 
     return Slidable(
@@ -247,7 +265,8 @@ class EmployeeCard extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EmployeeDetailScreen(employee: employee),
+                  builder: (context) =>
+                      EmployeeDetailScreen(employee: employee),
                 ),
               );
             },
@@ -256,10 +275,7 @@ class EmployeeCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.grey.shade200,
-                  width: 1,
-                ),
+                border: Border.all(color: Colors.grey.shade200, width: 1),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.05),
@@ -299,7 +315,7 @@ class EmployeeCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    
+
                     // Info
                     Expanded(
                       child: Column(
@@ -307,9 +323,8 @@ class EmployeeCard extends StatelessWidget {
                         children: [
                           Text(
                             employee.name,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 6),
                           Row(
@@ -322,9 +337,8 @@ class EmployeeCard extends StatelessWidget {
                               const SizedBox(width: 4),
                               Text(
                                 '${employee.pricePerDay.toStringAsFixed(0)} MAD/day',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.grey.shade600,
-                                    ),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: Colors.grey.shade600),
                               ),
                               if (employee.phone != null) ...[
                                 const SizedBox(width: 12),
@@ -337,9 +351,8 @@ class EmployeeCard extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     employee.phone!,
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                          color: Colors.grey.shade600,
-                                        ),
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(color: Colors.grey.shade600),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
@@ -349,7 +362,7 @@ class EmployeeCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
+
                     // Stats
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -364,7 +377,9 @@ class EmployeeCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: AppTheme.accentColor.withValues(alpha: 0.3),
+                                color: AppTheme.accentColor.withValues(
+                                  alpha: 0.3,
+                                ),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -373,7 +388,9 @@ class EmployeeCard extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                shifts.length.toString(),
+                                monthlyDays % 1 == 0
+                                    ? monthlyDays.toInt().toString()
+                                    : monthlyDays.toString(),
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -381,7 +398,7 @@ class EmployeeCard extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'shifts',
+                                'days',
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.white.withValues(alpha: 0.9),
@@ -439,13 +456,7 @@ class EmployeeCard extends StatelessWidget {
             color: AppTheme.primaryColor,
           ),
         ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 9,
-            color: Colors.grey.shade600,
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 9, color: Colors.grey.shade600)),
       ],
     );
   }
@@ -454,9 +465,7 @@ class EmployeeCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           children: [
             Icon(Icons.warning_rounded, color: AppTheme.errorColor),

@@ -34,6 +34,9 @@ class Client extends HiveObject {
   @HiveField(9)
   DateTime createdAt;
 
+  @HiveField(10)
+  String? projectName;
+
   Client({
     required this.id,
     required this.name,
@@ -44,6 +47,7 @@ class Client extends HiveObject {
     this.isActive = true,
     this.category,
     this.notes,
+    this.projectName,
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -58,6 +62,7 @@ class Client extends HiveObject {
     bool? isActive,
     String? category,
     String? notes,
+    String? projectName,
     DateTime? createdAt,
   }) {
     return Client(
@@ -70,6 +75,7 @@ class Client extends HiveObject {
       isActive: isActive ?? this.isActive,
       category: category ?? this.category,
       notes: notes ?? this.notes,
+      projectName: projectName ?? this.projectName,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -86,6 +92,7 @@ class Client extends HiveObject {
       'isActive': isActive,
       'category': category,
       'notes': notes,
+      'projectName': projectName,
       'createdAt': createdAt.toIso8601String(),
     };
   }
@@ -102,6 +109,7 @@ class Client extends HiveObject {
       isActive: json['isActive'] ?? true,
       category: json['category'],
       notes: json['notes'],
+      projectName: json['projectName'],
       createdAt: DateTime.parse(json['createdAt']),
     );
   }

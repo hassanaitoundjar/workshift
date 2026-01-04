@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appTitle": "WorkShift",
+  "appTitle": "Shihab Falling",
   "@appTitle": {
     "description": "The application title"
   },
@@ -19,7 +19,9 @@
   "phoneNumber": "Phone Number",
   "pricePerDay": "Price Per Day",
   "clientName": "Client Name",
+  "projectName": "Project Name",
   "location": "Location",
+  "enterProjectName": "Enter project name",
   "selectEmployee": "Select Employee",
   "selectClient": "Select Client",
   "selectMonth": "Select Month",
@@ -68,7 +70,7 @@
   "statistics": "Statistics",
   "about": "About",
   "appVersion": "App Version",
-  "aboutWorkShift": "About WorkShift",
+  "aboutWorkShift": "About Shihab Falling",
   "optional": "Optional",
   "required": "Required",
   "createNewClient": "Create a new client",
@@ -105,6 +107,7 @@
   "results": "results",
   "result": "result",
   "clear": "Clear",
+  "copy": "Copy",
   "noEmployeesFound": "No employees found",
   "startByAddingFirstEmployee": "Start by adding your first employee",
   "tryDifferentSearchTerm": "Try a different search term",
@@ -168,6 +171,13 @@
   "forceUpdateRequired": "This update is required to continue using the app.",
   "later": "Later",
   "updateNow": "Update Now",
-  "cannotOpenDownloadLink": "Cannot open download link. Please check your internet connection."
+  "cannotOpenDownloadLink": "Cannot open download link. Please check your internet connection.",
+  "downloadLink": "Download Link",
+  "copyUrlToOpenManually": "Please copy the URL below and open it in your browser:",
+  "urlCopied": "URL copied to clipboard",
+  "error": "Error",
+  "restoreDataConfirm": "Are you sure you want to restore data from backup? This will overwrite all current data.",
+  "restore": "Restore",
+  "dataRestoredSuccessfully": "Data restored successfully"
 }
 
