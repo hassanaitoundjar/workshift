@@ -8,6 +8,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'dart:io';
 import 'dart:async';
+import 'package:share_plus/share_plus.dart';
 import '../../config/theme.dart';
 import '../../providers/database_provider.dart';
 import '../../models/employee.dart';
@@ -60,7 +61,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
           slivers: [
             // Modern App Bar
             SliverAppBar(
-              expandedHeight: isSmallScreen ? 160 : 200,
+              expandedHeight: isSmallScreen ? 140 : 200,
               floating: false,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
@@ -98,12 +99,26 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   child: SafeArea(
                     child: LayoutBuilder(
                       builder: (context, constraints) {
-                        final isExpanded = constraints.maxHeight > 150;
-                        final iconSize = isExpanded ? 32.0 : 24.0;
-                        final titleSize = isExpanded ? 28.0 : 20.0;
-                        final spacing = isExpanded ? 12.0 : 8.0;
-                        final topPadding = isExpanded ? 60.0 : 20.0;
-                        final bottomPadding = isExpanded ? 16.0 : 8.0;
+                        final isExpanded = constraints.maxHeight > 120;
+                        final iconSize = isSmallScreen
+                            ? (isExpanded ? 24.0 : 20.0)
+                            : (isExpanded ? 32.0 : 24.0);
+                        final titleSize = isSmallScreen
+                            ? (isExpanded ? 22.0 : 18.0)
+                            : (isExpanded ? 28.0 : 20.0);
+                        final subtitleSize = isSmallScreen ? 12.0 : 14.0;
+                        final spacing = isSmallScreen
+                            ? (isExpanded ? 8.0 : 4.0)
+                            : (isExpanded ? 12.0 : 8.0);
+                        final topPadding = isSmallScreen
+                            ? (isExpanded ? 24.0 : 16.0)
+                            : (isExpanded ? 60.0 : 20.0);
+                        final bottomPadding = isSmallScreen
+                            ? (isExpanded ? 12.0 : 8.0)
+                            : (isExpanded ? 16.0 : 8.0);
+                        final iconPadding = isSmallScreen
+                            ? (isExpanded ? 10.0 : 8.0)
+                            : (isExpanded ? 16.0 : 12.0);
 
                         return Padding(
                           padding: EdgeInsets.only(
@@ -117,10 +132,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                padding: EdgeInsets.all(isExpanded ? 16 : 12),
+                                padding: EdgeInsets.all(iconPadding),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withValues(alpha: 0.25),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(
+                                    isSmallScreen ? 16 : 20,
+                                  ),
                                   border: Border.all(
                                     color: Colors.white.withValues(alpha: 0.3),
                                     width: 1,
@@ -133,32 +150,28 @@ class _ReportsScreenState extends State<ReportsScreen> {
                                 ),
                               ),
                               if (spacing > 0) SizedBox(height: spacing),
-                              Flexible(
-                                child: Text(
-                                  l10n.reports,
+                              Text(
+                                l10n.reports,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: titleSize,
+                                  color: Colors.white,
+                                  height: 1.2,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              if (isExpanded) ...[
+                                SizedBox(height: isSmallScreen ? 2 : 4),
+                                Text(
+                                  l10n.generateEmployeeReports,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: titleSize,
-                                    color: Colors.white,
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                    fontSize: subtitleSize,
+                                    height: 1.2,
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              if (isExpanded) ...[
-                                const SizedBox(height: 4),
-                                Flexible(
-                                  child: Text(
-                                    l10n.generateEmployeeReports,
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.9,
-                                      ),
-                                      fontSize: 14,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
                                 ),
                               ],
                             ],
@@ -508,21 +521,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
             children: [
               Text(
                 l10n.totalShifts,
-                style: const TextStyle(color: Colors.white70, fontSize: 14),
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: isSmallScreen ? 13 : 14,
+                ),
               ),
               Text(
                 '$totalDays',
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: isSmallScreen ? 20 : 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: isSmallScreen ? 12 : 16),
           const Divider(color: Colors.white24),
-          const SizedBox(height: 16),
+          SizedBox(height: isSmallScreen ? 12 : 16),
           Row(
             children: [
               Expanded(
@@ -531,42 +547,51 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   children: [
                     Text(
                       l10n.totalEarnings,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 13,
+                        fontSize: isSmallScreen ? 11 : 13,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      '${totalEarnings.toStringAsFixed(0)} MAD',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '${totalEarnings.toStringAsFixed(0)} MAD',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: isSmallScreen ? 16 : 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
               Container(width: 1, height: 40, color: Colors.white24),
+              SizedBox(width: isSmallScreen ? 8 : 0),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       l10n.totalAdvances,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white70,
-                        fontSize: 13,
+                        fontSize: isSmallScreen ? 11 : 13,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      '${totalAdvances.toStringAsFixed(0)} MAD',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '${totalAdvances.toStringAsFixed(0)} MAD',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: isSmallScreen ? 16 : 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -574,37 +599,46 @@ class _ReportsScreenState extends State<ReportsScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: isSmallScreen ? 12 : 16),
           const Divider(color: Colors.white24),
-          const SizedBox(height: 16),
+          SizedBox(height: isSmallScreen ? 12 : 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                l10n.balanceToPay,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              Flexible(
+                child: Text(
+                  l10n.balanceToPay,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: isSmallScreen ? 14 : 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: balance >= 0
-                      ? Colors.green.withValues(alpha: 0.3)
-                      : Colors.red.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '${balance >= 0 ? '+' : ''}${balance.toStringAsFixed(0)} MAD',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              const SizedBox(width: 8),
+              Flexible(
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isSmallScreen ? 12 : 16,
+                    vertical: isSmallScreen ? 6 : 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: balance >= 0
+                        ? Colors.green.withValues(alpha: 0.3)
+                        : Colors.red.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      '${balance >= 0 ? '+' : ''}${balance.toStringAsFixed(0)} MAD',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: isSmallScreen ? 16 : 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -877,6 +911,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     Employee employee,
   ) async {
     final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).toString();
     setState(() => _isGenerating = true);
     final dbProvider = Provider.of<DatabaseProvider>(context, listen: false);
 
@@ -887,7 +922,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       // Let's try to rename 'Sheet1' to our desired name.
       final String defaultSheet = excel.getDefaultSheet() ?? 'Sheet1';
       final String sheetName =
-          'Report ${DateFormat('MMM yyyy').format(_selectedMonth)}';
+          'Report ${DateFormat('MMM yyyy', locale).format(_selectedMonth)}';
 
       // Rename safe approach: check if renaming is supported without crashing
       // If renaming crashes, we will just use the default sheet with the default name
@@ -969,7 +1004,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
         null,
         null,
         TextCellValue(
-          '${l10n.month}: ${DateFormat('MMMM yyyy').format(_selectedMonth)}',
+          '${l10n.month}: ${DateFormat('MMMM yyyy', locale).format(_selectedMonth)}',
         ),
       ]);
 
@@ -983,7 +1018,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       setCell(
         3,
         2,
-        '${l10n.month}: ${DateFormat('MMMM yyyy').format(_selectedMonth)}',
+        '${l10n.month}: ${DateFormat('MMMM yyyy', locale).format(_selectedMonth)}',
         infoStyle,
       );
 
@@ -992,7 +1027,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       // --- Table Headers ---
       final List<TextCellValue> headers = [
         TextCellValue(l10n.date),
-        TextCellValue('Day'),
+        TextCellValue(l10n.day),
         TextCellValue(l10n.client),
         TextCellValue(l10n.projectName),
         TextCellValue(l10n.shift),
@@ -1040,8 +1075,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
         if (dayShifts.isEmpty) {
           // Empty day row
           final rowData = [
-            TextCellValue(DateFormat('dd/MM/yyyy').format(date)),
-            TextCellValue(DateFormat('EEEE').format(date)),
+            TextCellValue(DateFormat('dd/MM/yyyy', locale).format(date)),
+            TextCellValue(DateFormat('EEEE', locale).format(date)),
             TextCellValue('-'),
             TextCellValue('-'),
             TextCellValue(l10n.off),
@@ -1072,8 +1107,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 (shift.durationInHours / 8.0) * employee.pricePerDay;
 
             final rowData = [
-              TextCellValue(DateFormat('dd/MM/yyyy').format(date)),
-              TextCellValue(DateFormat('EEEE').format(date)),
+              TextCellValue(DateFormat('dd/MM/yyyy', locale).format(date)),
+              TextCellValue(DateFormat('EEEE', locale).format(date)),
               TextCellValue(client?.name ?? '-'),
               TextCellValue(client?.projectName ?? '-'),
               TextCellValue(shift.shiftTypeName),
@@ -1132,7 +1167,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       // Summary Data
       final summaryData = [
-        ['Total Days', totalWorkDays.toStringAsFixed(1)],
+        [l10n.totalDays, totalWorkDays.toStringAsFixed(1)],
         [l10n.totalEarnings, totalEarnings.toStringAsFixed(2)],
         [l10n.totalAdvances, totalAdvances.toStringAsFixed(2)],
         [l10n.balanceToPay, netPay.toStringAsFixed(2)],
@@ -1161,15 +1196,15 @@ class _ReportsScreenState extends State<ReportsScreen> {
       sheet.appendRow([]); // Spacer
       rowIndex++;
 
-      sheet.appendRow([TextCellValue('Client / Project Breakdown')]);
-      setCell(0, rowIndex, 'Client / Project Breakdown', titleStyle);
+      sheet.appendRow([TextCellValue(l10n.clientProjectBreakdown)]);
+      setCell(0, rowIndex, l10n.clientProjectBreakdown, titleStyle);
       rowIndex++;
 
       // Header for Breakdown
       final breakdownHeaders = [
         TextCellValue(l10n.client),
         TextCellValue(l10n.projectName),
-        TextCellValue('Total Days'),
+        TextCellValue(l10n.totalDays),
       ];
       sheet.appendRow(breakdownHeaders);
       for (int i = 0; i < breakdownHeaders.length; i++) {
@@ -1247,7 +1282,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       }
 
       final fileName =
-          '${employee.name}_Report_${DateFormat('yyyyMM').format(_selectedMonth)}.xlsx';
+          '${employee.name}_Report_${DateFormat('yyyyMM', locale).format(_selectedMonth)}.xlsx';
       final filePath = '${directory.path}/$fileName';
       final file = File(filePath);
 
@@ -1288,6 +1323,12 @@ class _ReportsScreenState extends State<ReportsScreen> {
                   } catch (e) {
                     // ignore
                   }
+                } else if (Platform.isAndroid) {
+                  try {
+                    await Share.shareXFiles([XFile(filePath)], text: fileName);
+                  } catch (e) {
+                    // ignore
+                  }
                 }
               },
             ),
@@ -1318,6 +1359,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
     try {
       final l10n = AppLocalizations.of(context)!;
+      final locale = Localizations.localeOf(context).toString();
 
       // Calculations
       final totalEarnings = shifts.fold<double>(
@@ -1405,7 +1447,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       ),
                       pw.SizedBox(height: 4),
                       pw.Text(
-                        'Period: ${DateFormat('MMMM yyyy').format(_selectedMonth)}',
+                        '${l10n.period}: ${DateFormat('MMMM yyyy', locale).format(_selectedMonth)}',
                         style: const pw.TextStyle(
                           fontSize: 12,
                           color: PdfColors.grey700,
@@ -1417,7 +1459,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     crossAxisAlignment: pw.CrossAxisAlignment.end,
                     children: [
                       pw.Text(
-                        'Date: ${DateFormat('dd MMM yyyy').format(DateTime.now())}',
+                        '${l10n.reportDate}: ${DateFormat('dd MMM yyyy', locale).format(DateTime.now())}',
                         style: const pw.TextStyle(
                           fontSize: 10,
                           color: PdfColors.grey600,
@@ -1497,7 +1539,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                       crossAxisAlignment: pw.CrossAxisAlignment.end,
                       children: [
                         pw.Text(
-                          'Daily Rate',
+                          l10n.dailyRate,
                           style: const pw.TextStyle(
                             fontSize: 9,
                             color: PdfColors.grey600,
@@ -1521,7 +1563,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               pw.Row(
                 children: [
                   buildStatCard(
-                    'Total Days',
+                    l10n.totalDays,
                     totalDays.toStringAsFixed(1),
                     PdfColors.blue50,
                     PdfColors.blue800,
@@ -1564,7 +1606,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(
-                        'Employee Signature: ${employee.name}',
+                        '${l10n.employeeSignature}: ${employee.name}',
                         style: const pw.TextStyle(
                           color: PdfColors.grey700,
                           fontSize: 10,
@@ -1582,7 +1624,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(
-                        'Manager Signature: Laabi Shihab',
+                        '${l10n.managerSignature}: ${l10n.managerName}',
                         style: const pw.TextStyle(
                           color: PdfColors.grey700,
                           fontSize: 10,

@@ -178,6 +178,16 @@
   "error": "Erreur",
   "restoreDataConfirm": "Êtes-vous sûr de vouloir restaurer les données depuis la sauvegarde ? Cela écrasera toutes les données actuelles.",
   "restore": "Restaurer",
-  "dataRestoredSuccessfully": "Données restaurées avec succès"
+  "dataRestoredSuccessfully": "Données restaurées avec succès",
+  "day": "Jour",
+  "totalDays": "Total des jours",
+  "clientProjectBreakdown": "Détails Client / Projet",
+  "dailyRate": "Taux Journalier",
+  "period": "Période",
+  "reportDate": "Date",
+  "companyName": "Shihab Falling",
+  "employeeSignature": "Signature de l'employé",
+  "managerSignature": "Signature du responsable",
+  "managerName": "Laabi Shihab"
 }
 

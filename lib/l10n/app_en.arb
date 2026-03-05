@@ -178,6 +178,16 @@
   "error": "Error",
   "restoreDataConfirm": "Are you sure you want to restore data from backup? This will overwrite all current data.",
   "restore": "Restore",
-  "dataRestoredSuccessfully": "Data restored successfully"
+  "dataRestoredSuccessfully": "Data restored successfully",
+  "day": "Day",
+  "totalDays": "Total Days",
+  "clientProjectBreakdown": "Client / Project Breakdown",
+  "dailyRate": "Daily Rate",
+  "period": "Period",
+  "reportDate": "Date",
+  "companyName": "Shihab Falling",
+  "employeeSignature": "Employee Signature",
+  "managerSignature": "Manager Signature",
+  "managerName": "Laabi Shihab"
 }
 

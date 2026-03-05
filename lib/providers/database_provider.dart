@@ -38,15 +38,6 @@ class DatabaseProvider extends ChangeNotifier {
         Hive.registerAdapter(ShiftAdapter());
       }
 
-      // Delete old boxes if they exist (to handle schema changes)
-      try {
-        await Hive.deleteBoxFromDisk(employeeBoxName);
-        await Hive.deleteBoxFromDisk(clientBoxName);
-        await Hive.deleteBoxFromDisk(shiftBoxName);
-      } catch (e) {
-        debugPrint('No old boxes to delete: $e');
-      }
-
       // Open boxes
       _employeeBox = await Hive.openBox<Employee>(employeeBoxName);
       _clientBox = await Hive.openBox<Client>(clientBoxName);

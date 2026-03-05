@@ -546,4 +546,34 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get dataRestoredSuccessfully => 'Données restaurées avec succès';
+
+  @override
+  String get day => 'Jour';
+
+  @override
+  String get totalDays => 'Total des jours';
+
+  @override
+  String get clientProjectBreakdown => 'Détails Client / Projet';
+
+  @override
+  String get dailyRate => 'Taux Journalier';
+
+  @override
+  String get period => 'Période';
+
+  @override
+  String get reportDate => 'Date';
+
+  @override
+  String get companyName => 'Shihab Falling';
+
+  @override
+  String get employeeSignature => 'Signature de l\'employé';
+
+  @override
+  String get managerSignature => 'Signature du responsable';
+
+  @override
+  String get managerName => 'Laabi Shihab';
 }

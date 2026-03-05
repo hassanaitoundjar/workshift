@@ -76,6 +76,9 @@ dev_dependencies:
   hive_generator: ^2.0.1
   build_runner: ^2.4.8
 
+  # App icon generator
+  flutter_launcher_icons: ^0.13.1
+
 # The following section is specific to Flutter packages.
 flutter:
   # the material Icons class.
@@ -109,6 +112,13 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
+  #\n  # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# App Icon Configuration
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo/logo.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/logo/logo.png"

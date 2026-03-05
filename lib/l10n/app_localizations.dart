@@ -1137,6 +1137,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Data restored successfully'**
   String get dataRestoredSuccessfully;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @totalDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Days'**
+  String get totalDays;
+
+  /// No description provided for @clientProjectBreakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'Client / Project Breakdown'**
+  String get clientProjectBreakdown;
+
+  /// No description provided for @dailyRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Rate'**
+  String get dailyRate;
+
+  /// No description provided for @period.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get period;
+
+  /// No description provided for @reportDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get reportDate;
+
+  /// No description provided for @companyName.
+  ///
+  /// In en, this message translates to:
+  /// **'Shihab Falling'**
+  String get companyName;
+
+  /// No description provided for @employeeSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Employee Signature'**
+  String get employeeSignature;
+
+  /// No description provided for @managerSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Manager Signature'**
+  String get managerSignature;
+
+  /// No description provided for @managerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Laabi Shihab'**
+  String get managerName;
 }
 
 class _AppLocalizationsDelegate

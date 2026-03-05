@@ -178,6 +178,10 @@
   "error": "خطأ",
   "restoreDataConfirm": "هل أنت متأكد أنك تريد استعادة البيانات من النسخة الاحتياطية؟ سيؤدي ذلك إلى استبدال جميع البيانات الحالية.",
   "restore": "استعادة",
-  "dataRestoredSuccessfully": "تم استعادة البيانات بنجاح"
+  "dataRestoredSuccessfully": "تم استعادة البيانات بنجاح",
+  "day": "اليوم",
+  "totalDays": "إجمالي الأيام",
+  "clientProjectBreakdown": "تفاصيل العميل / المشروع",
+  "dailyRate": "المعدل اليومي"
 }
 

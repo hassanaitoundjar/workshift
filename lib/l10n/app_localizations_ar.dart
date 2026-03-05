@@ -536,4 +536,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dataRestoredSuccessfully => 'تم استعادة البيانات بنجاح';
+
+  @override
+  String get day => 'اليوم';
+
+  @override
+  String get totalDays => 'إجمالي الأيام';
+
+  @override
+  String get clientProjectBreakdown => 'تفاصيل العميل / المشروع';
+
+  @override
+  String get dailyRate => 'المعدل اليومي';
+
+  @override
+  String get period => 'Period';
+
+  @override
+  String get reportDate => 'Date';
+
+  @override
+  String get companyName => 'Shihab Falling';
+
+  @override
+  String get employeeSignature => 'Employee Signature';
+
+  @override
+  String get managerSignature => 'Manager Signature';
+
+  @override
+  String get managerName => 'Laabi Shihab';
 }

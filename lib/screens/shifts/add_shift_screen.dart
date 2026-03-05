@@ -526,36 +526,38 @@ class _AddShiftScreenState extends State<AddShiftScreen> {
           title: Text(l10n.selectClient),
           content: SizedBox(
             width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.clear),
-                  title: Text(l10n.noClient),
-                  onTap: () {
-                    setState(() {
-                      _selectedClient = null;
-                    });
-                    Navigator.pop(context);
-                  },
-                ),
-                const Divider(),
-                ...clients.map(
-                  (client) => ListTile(
-                    leading: const Icon(Icons.business),
-                    title: Text(client.name),
-                    subtitle: client.location != null
-                        ? Text(client.location!)
-                        : null,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.clear),
+                    title: Text(l10n.noClient),
                     onTap: () {
                       setState(() {
-                        _selectedClient = client;
+                        _selectedClient = null;
                       });
                       Navigator.pop(context);
                     },
                   ),
-                ),
-              ],
+                  const Divider(),
+                  ...clients.map(
+                    (client) => ListTile(
+                      leading: const Icon(Icons.business),
+                      title: Text(client.name),
+                      subtitle: client.location != null
+                          ? Text(client.location!)
+                          : null,
+                      onTap: () {
+                        setState(() {
+                          _selectedClient = client;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
